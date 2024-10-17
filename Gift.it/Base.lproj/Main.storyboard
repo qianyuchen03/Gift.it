@@ -83,7 +83,7 @@
                                 <buttonConfiguration key="configuration" style="filled" title="Login">
                                     <fontDescription key="titleFontDescription" name="CourierNewPSMT" family="Courier New" pointSize="23"/>
                                     <color key="baseForegroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="baseBackgroundColor" red="0.94901960780000005" green="0.59999999999999998" blue="0.69411764710000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    <color key="baseBackgroundColor" red="0.94901960780000005" green="0.59999999999999998" blue="0.69411764710000001" alpha="0.5" colorSpace="custom" customColorSpace="displayP3"/>
                                 </buttonConfiguration>
                                 <connections>
                                     <segue destination="Jl5-LJ-fPM" kind="presentation" identifier="LoginSeque" modalPresentationStyle="overCurrentContext" id="ivd-tf-mAa"/>
@@ -207,7 +207,7 @@
                         <segue destination="vgh-Qp-lrE" kind="relationship" relationship="viewControllers" id="4Um-Y5-PLu"/>
                         <segue destination="A5Z-Cv-fes" kind="relationship" relationship="viewControllers" id="Iyo-i7-eSG"/>
                         <segue destination="LAu-PH-hc2" kind="relationship" relationship="viewControllers" id="x7d-W3-HWX"/>
-                        <segue destination="cen-Mp-uSD" kind="relationship" relationship="viewControllers" id="Yj0-Fo-tX0"/>
+                        <segue destination="Vbq-0y-7Iy" kind="relationship" relationship="viewControllers" id="Yj0-Fo-tX0"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WhL-KT-5hf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -276,42 +276,238 @@
             </objects>
             <point key="canvasLocation" x="2460" y="1798"/>
         </scene>
-        <!--Profile-->
+        <!--Profile View Controller-->
         <scene sceneID="vds-5b-znA">
             <objects>
-                <viewController id="cen-Mp-uSD" sceneMemberID="viewController">
+                <viewController id="cen-Mp-uSD" customClass="ProfileViewController" customModule="Gift_it" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Plv-PE-AcL">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Profile" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jmM-II-yDI">
-                                <rect key="frame" x="152" y="114" width="89" height="24"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Profile" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jmM-II-yDI">
+                                <rect key="frame" x="152" y="88" width="89" height="24"/>
                                 <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="21"/>
                                 <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Doris" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4QU-Aj-yKa">
+                                <rect key="frame" x="128" y="357" width="136" height="51"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="45"/>
+                                <color key="textColor" red="0.45098039215686275" green="0.22352941176470587" blue="0.30588235294117649" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="@doris_username" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kb4-PF-mQr">
+                                <rect key="frame" x="106" y="416" width="181" height="23"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="20"/>
+                                <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="October 3, 1988" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fsn-NY-bfF">
+                                <rect key="frame" x="69" y="510" width="289" height="37"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="32"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t5W-si-oc2">
+                                <rect key="frame" x="319" y="74" width="46" height="46"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain">
+                                    <imageReference key="image" image="gearshape" catalog="system" symbolScale="large"/>
+                                </buttonConfiguration>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="asa-Ms-8Wa">
+                                <rect key="frame" x="22" y="74" width="45" height="46"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain">
+                                    <imageReference key="image" image="square.and.pencil" catalog="system" symbolScale="large"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <segue destination="KB5-PO-Tcw" kind="show" identifier="EditProfileSegueIdentifier" id="Y3b-Ye-2XJ"/>
+                                </connections>
+                            </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="doris-pfp" translatesAutoresizingMaskIntoConstraints="NO" id="wB8-E6-xUs">
+                                <rect key="frame" x="62" y="183" width="268" height="149"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Z39-4h-7rT">
+                                <rect key="frame" x="35" y="517" width="34" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" systemColor="labelColor"/>
+                                <imageReference key="image" image="gift" catalog="system" symbolScale="large"/>
+                            </imageView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" text="someone take me to a ren fair" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AMh-Of-KsW">
+                                <rect key="frame" x="33" y="555" width="325" height="115"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" systemColor="labelColor"/>
+                                <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="20"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="iRv-Wy-ZUa"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="jmM-II-yDI" firstAttribute="centerY" secondItem="Plv-PE-AcL" secondAttribute="centerY" constant="-300" id="K9G-JD-oTI"/>
+                            <constraint firstItem="jmM-II-yDI" firstAttribute="centerY" secondItem="Plv-PE-AcL" secondAttribute="centerY" constant="-330" id="K9G-JD-oTI"/>
                             <constraint firstItem="jmM-II-yDI" firstAttribute="centerX" secondItem="Plv-PE-AcL" secondAttribute="centerX" id="leB-6c-mm8"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Profile" image="person.crop.circle" catalog="system" id="Lfz-RU-sad"/>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="g8A-ay-3ti"/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="bioTextView" destination="AMh-Of-KsW" id="hUl-ue-ymF"/>
+                        <outlet property="birthdayLabel" destination="fsn-NY-bfF" id="N0R-de-TpZ"/>
+                        <outlet property="nameLabel" destination="4QU-Aj-yKa" id="YJX-yB-8bC"/>
+                        <outlet property="usernameLabel" destination="Kb4-PF-mQr" id="Blx-Nq-NHj"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ufy-B1-r5s" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3950" y="1798"/>
+            <point key="canvasLocation" x="4875.5725190839694" y="1797.8873239436621"/>
+        </scene>
+        <!--Edit Profile View Controller-->
+        <scene sceneID="dEf-D8-Lod">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Pal-8d-qaF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <viewController id="KB5-PO-Tcw" customClass="EditProfileViewController" customModule="Gift_it" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="536-Yi-9VD">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="doris-pfp" translatesAutoresizingMaskIntoConstraints="NO" id="iLb-8q-N4Z">
+                                <rect key="frame" x="62" y="177" width="268" height="149"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="Doris" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3jA-kN-EcL">
+                                <rect key="frame" x="28" y="350" width="336" height="50.666666666666686"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="45"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Edit Profile" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MdS-nx-CCZ">
+                                <rect key="frame" x="120" y="79" width="152" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="21"/>
+                                <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="October 3, 1988" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JlC-pF-zHN">
+                                <rect key="frame" x="93" y="495" width="244" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="25"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8gJ-qy-I8X">
+                                <rect key="frame" x="55" y="501" width="33" height="23"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" systemColor="labelColor"/>
+                                <imageReference key="image" image="gift" catalog="system" symbolScale="large"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="@doris_username" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Phz-7W-y1R">
+                                <rect key="frame" x="106" y="415" width="181" height="23"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="20"/>
+                                <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="someone take me to a ren fair" translatesAutoresizingMaskIntoConstraints="NO" id="2za-pk-HzR">
+                                <rect key="frame" x="34" y="557" width="325" height="115"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.94901960784313721" green="0.93725490196078431" blue="0.86274509803921573" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" systemColor="labelColor"/>
+                                <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="20"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="------------------------------------------------------" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O1o-CH-2Bw">
+                                <rect key="frame" x="34" y="394" width="325" height="12"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="10"/>
+                                <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="----------------------------------------" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KDB-Cq-PhW">
+                                <rect key="frame" x="97" y="522" width="241" height="12"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="10"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="100/100" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LMa-pz-2cU">
+                                <rect key="frame" x="265" y="680" width="90" height="23"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="20"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="urr-TR-eb6">
+                                <rect key="frame" x="120" y="729" width="152" height="41"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" red="0.94901960780000005" green="0.59999999999999998" blue="0.69411764710000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Save">
+                                    <fontDescription key="titleFontDescription" name="CourierNewPSMT" family="Courier New" pointSize="23"/>
+                                    <color key="baseForegroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="baseBackgroundColor" red="0.94901960780000005" green="0.59999999999999998" blue="0.69411764710000001" alpha="0.5" colorSpace="custom" customColorSpace="displayP3"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="saveButtonPressed:" destination="KB5-PO-Tcw" eventType="touchUpInside" id="qpg-3V-l6F"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="apw-Tz-np8"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="z67-Vd-ogC"/>
+                    <connections>
+                        <outlet property="birthdayTextField" destination="JlC-pF-zHN" id="Zgh-Hw-o06"/>
+                        <outlet property="characterCounterLabel" destination="LMa-pz-2cU" id="usE-F5-r6E"/>
+                        <outlet property="editBioTextView" destination="2za-pk-HzR" id="GeY-YH-vNW"/>
+                        <outlet property="nameTextField" destination="3jA-kN-EcL" id="88m-NI-fJu"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="5878.6259541984728" y="1797.8873239436621"/>
+        </scene>
+        <!--Profile-->
+        <scene sceneID="ZvF-tT-vqj">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Vbq-0y-7Iy" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Profile" image="person.crop.circle" catalog="system" id="Lfz-RU-sad"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="QZk-qw-W2u">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="cen-Mp-uSD" kind="relationship" relationship="rootViewController" id="gon-HS-25b"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kRc-Qc-iec" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3948.8549618320608" y="1797.8873239436621"/>
         </scene>
     </scenes>
     <color key="tintColor" red="0.94901960780000005" green="0.59999999999999998" blue="0.69411764710000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
     <resources>
         <image name="calendar" catalog="system" width="128" height="107"/>
+        <image name="doris-pfp" width="458" height="460"/>
+        <image name="gearshape" catalog="system" width="128" height="123"/>
+        <image name="gift" catalog="system" width="128" height="125"/>
         <image name="list.star" catalog="system" width="128" height="95"/>
         <image name="message" catalog="system" width="128" height="116"/>
         <image name="person.2" catalog="system" width="128" height="87"/>
         <image name="person.crop.circle" catalog="system" width="128" height="123"/>
+        <image name="square.and.pencil" catalog="system" width="128" height="121"/>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
