@@ -1,31 +1,29 @@
 //
-//  LoginViewController.swift
+//  CreateProfileViewController.swift
 //  Gift.it
 //
-//  Created by Prerna Singh on 10/15/24.
+//  Created by Rachel Huang on 10/18/24.
 //
 
 import UIKit
 
-class LoginViewController: UIViewController {
+class CreateProfileViewController: UIViewController {
 
+    @IBOutlet weak var nameField: UITextField!
+    @IBOutlet weak var phoneNumberField: UITextField!
+    @IBOutlet weak var usernameField: UITextField!
+    @IBOutlet weak var passwordField: UITextField!
+    @IBOutlet weak var birthdayField: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
     }
     
-    
-    @IBAction func loginButtonTapped(_ sender: UIButton) {
-        // Perform the segue to go to the next view controller
-        performSegue(withIdentifier: "LoginSegue", sender: self)
+    @IBAction func createAccountButtonTapped(_ sender: Any) {
+        performSegue(withIdentifier: "CreatedProfileSegue", sender: self)
     }
     
-    @IBAction func signUpButtonTapped(_ sender: Any) {
-        performSegue(withIdentifier: "CreateProfileSegue", sender: self)
-    }
-    
-
     /*
     // MARK: - Navigation
 

@@ -71,6 +71,10 @@
                                 <buttonConfiguration key="configuration" style="plain" title="Don't have an account?">
                                     <color key="baseForegroundColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
                                 </buttonConfiguration>
+                                <connections>
+                                    <action selector="signUpButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ghR-sm-I7E"/>
+                                    <segue destination="esa-9F-ZGZ" kind="presentation" identifier="CreateProfileSegue" modalPresentationStyle="fullScreen" id="F36-Ex-h7X"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gm2-rh-OJb">
                                 <rect key="frame" x="120.66666666666669" y="447" width="152" height="36"/>
@@ -124,16 +128,133 @@
             </objects>
             <point key="canvasLocation" x="5.343511450381679" y="-2.1126760563380285"/>
         </scene>
+        <!--Create Profile View Controller-->
+        <scene sceneID="dNt-J6-MiJ">
+            <objects>
+                <viewController id="esa-9F-ZGZ" customClass="CreateProfileViewController" customModule="Gift_it" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="SyR-tX-5ce">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Create Your Account" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uFw-Th-SpF">
+                                <rect key="frame" x="68" y="97" width="257" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="1Px-qc-eWL"/>
+                                    <constraint firstAttribute="width" constant="82" id="bnw-iX-JQX"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="22"/>
+                                <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="VWd-tl-k9W">
+                                <rect key="frame" x="68" y="347" width="261" height="34"/>
+                                <color key="backgroundColor" red="0.87214305189999997" green="0.87836155029999996" blue="0.89701704550000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="tintColor" red="0.93560606059999996" green="0.93560606059999996" blue="0.93560606059999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="261" id="4yt-Za-rGf"/>
+                                    <constraint firstAttribute="height" constant="34" id="Pdm-G9-Qy3"/>
+                                </constraints>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Phone Number" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BU5-Ab-VXk">
+                                <rect key="frame" x="68" y="404" width="261" height="34"/>
+                                <color key="backgroundColor" red="0.87214305189999997" green="0.87836155029999996" blue="0.89701704550000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="tintColor" red="0.93560606059999996" green="0.93560606059999996" blue="0.93560606059999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="261" id="1p6-iN-SDW"/>
+                                    <constraint firstAttribute="height" constant="34" id="fDG-xZ-JPP"/>
+                                </constraints>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oMy-Xn-Li5">
+                                <rect key="frame" x="68" y="465" width="261" height="34"/>
+                                <color key="backgroundColor" red="0.87214305189999997" green="0.87836155029999996" blue="0.89701704550000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="tintColor" red="0.93560606059999996" green="0.93560606059999996" blue="0.93560606059999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="34" id="OAx-1g-nJd"/>
+                                    <constraint firstAttribute="width" constant="261" id="VBR-h0-Azi"/>
+                                </constraints>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="RrN-Oq-xsQ">
+                                <rect key="frame" x="68" y="532" width="261" height="34"/>
+                                <color key="backgroundColor" red="0.87214305189999997" green="0.87836155029999996" blue="0.89701704550000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="tintColor" red="0.93560606059999996" green="0.93560606059999996" blue="0.93560606059999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="34" id="1Cu-Ln-VPi"/>
+                                    <constraint firstAttribute="width" constant="261" id="Oqo-zB-BPx"/>
+                                </constraints>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Birthday" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sU6-8C-wap">
+                                <rect key="frame" x="66" y="595" width="261" height="34"/>
+                                <color key="backgroundColor" red="0.87214305189999997" green="0.87836155029999996" blue="0.89701704550000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="tintColor" red="0.93560606059999996" green="0.93560606059999996" blue="0.93560606059999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="261" id="4YH-kf-GbW"/>
+                                    <constraint firstAttribute="height" constant="34" id="cKh-Fw-N9o"/>
+                                </constraints>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="profile_icon" translatesAutoresizingMaskIntoConstraints="NO" id="8mW-Hq-uOc">
+                                <rect key="frame" x="78" y="167" width="240" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xp8-fq-Alw">
+                                <rect key="frame" x="87" y="680" width="218" height="41"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="152" id="N5e-6V-2ct"/>
+                                    <constraint firstAttribute="height" constant="36" id="ohj-oE-l4w"/>
+                                </constraints>
+                                <color key="tintColor" red="0.94901960780000005" green="0.59999999999999998" blue="0.69411764710000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Create Account">
+                                    <fontDescription key="titleFontDescription" name="CourierNewPSMT" family="Courier New" pointSize="23"/>
+                                    <color key="baseForegroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="baseBackgroundColor" red="0.94901960780000005" green="0.59999999999999998" blue="0.69411764710000001" alpha="0.5" colorSpace="custom" customColorSpace="displayP3"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="createAccountButtonTapped:" destination="esa-9F-ZGZ" eventType="touchUpInside" id="T2P-ZO-wGZ"/>
+                                    <segue destination="Jl5-LJ-fPM" kind="presentation" identifier="CreatedProfileSegue" id="ou1-tn-kEh"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="gA0-JM-K0D"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="yAM-4m-A2v"/>
+                    <connections>
+                        <outlet property="birthdayField" destination="sU6-8C-wap" id="CF0-DM-nbk"/>
+                        <outlet property="nameField" destination="VWd-tl-k9W" id="nzD-NT-oRx"/>
+                        <outlet property="passwordField" destination="RrN-Oq-xsQ" id="ppr-0A-Kgc"/>
+                        <outlet property="phoneNumberField" destination="BU5-Ab-VXk" id="2Tf-bV-wSh"/>
+                        <outlet property="usernameField" destination="oMy-Xn-Li5" id="pgq-tA-Nlr"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="N8R-g9-ivc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1070.9923664122136" y="9.8591549295774659"/>
+        </scene>
         <!--Calendar-->
         <scene sceneID="BXD-KV-hjd">
             <objects>
                 <viewController id="vgh-Qp-lrE" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="GcR-uy-uNM">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Calendar" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1hm-cQ-aPr">
-                                <rect key="frame" x="146" y="114" width="101" height="24"/>
+                                <rect key="frame" x="146" y="109" width="101" height="24"/>
                                 <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="21"/>
                                 <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -160,11 +281,11 @@
             <objects>
                 <viewController id="8Ip-DK-sNW" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="UJl-Dg-TW5">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My Friends" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j1K-oy-ZoL">
-                                <rect key="frame" x="133" y="114" width="127" height="24"/>
+                                <rect key="frame" x="133" y="109" width="127" height="24"/>
                                 <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="21"/>
                                 <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -219,11 +340,11 @@
             <objects>
                 <viewController storyboardIdentifier="GiftingGroup" id="A5Z-Cv-fes" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="lpx-4a-IEq">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gifting Groups" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cqQ-yY-AQo">
-                                <rect key="frame" x="108" y="114" width="177" height="24"/>
+                                <rect key="frame" x="108" y="109" width="177" height="24"/>
                                 <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="21"/>
                                 <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -251,11 +372,11 @@
             <objects>
                 <viewController id="LAu-PH-hc2" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9Nd-N0-cmW">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wishlist" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jbd-Y1-bBP">
-                                <rect key="frame" x="146" y="114" width="101" height="24"/>
+                                <rect key="frame" x="146" y="109" width="101" height="24"/>
                                 <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="21"/>
                                 <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -281,7 +402,7 @@
             <objects>
                 <viewController id="cen-Mp-uSD" customClass="ProfileViewController" customModule="Gift_it" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Plv-PE-AcL">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Profile" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jmM-II-yDI">
@@ -373,10 +494,9 @@
         <!--Edit Profile View Controller-->
         <scene sceneID="dEf-D8-Lod">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Pal-8d-qaF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <viewController id="KB5-PO-Tcw" customClass="EditProfileViewController" customModule="Gift_it" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="536-Yi-9VD">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="doris-pfp" translatesAutoresizingMaskIntoConstraints="NO" id="iLb-8q-N4Z">
@@ -471,6 +591,7 @@
                         <outlet property="nameTextField" destination="3jA-kN-EcL" id="88m-NI-fJu"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Pal-8d-qaF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="5878.6259541984728" y="1797.8873239436621"/>
         </scene>
@@ -481,7 +602,7 @@
                     <tabBarItem key="tabBarItem" title="Profile" image="person.crop.circle" catalog="system" id="Lfz-RU-sad"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="QZk-qw-W2u">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="44"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="56"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -494,6 +615,9 @@
             <point key="canvasLocation" x="3948.8549618320608" y="1797.8873239436621"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="ou1-tn-kEh"/>
+    </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.94901960780000005" green="0.59999999999999998" blue="0.69411764710000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
     <resources>
         <image name="calendar" catalog="system" width="128" height="107"/>
@@ -504,6 +628,7 @@
         <image name="message" catalog="system" width="128" height="116"/>
         <image name="person.2" catalog="system" width="128" height="87"/>
         <image name="person.crop.circle" catalog="system" width="128" height="123"/>
+        <image name="profile_icon" width="920" height="748"/>
         <image name="square.and.pencil" catalog="system" width="128" height="121"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
