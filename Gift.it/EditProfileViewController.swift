@@ -7,7 +7,7 @@
 
 import UIKit
 
-class EditProfileViewController: UIViewController, UITextViewDelegate {
+class EditProfileViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate {
 
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var birthdayTextField: UITextField!
@@ -26,7 +26,12 @@ class EditProfileViewController: UIViewController, UITextViewDelegate {
         nameTextField.text = originalName
         birthdayTextField.text = originalBirthday
         editBioTextView.text = originalBio
+        
+        nameTextField.delegate = self
+        birthdayTextField.delegate = self
         editBioTextView.delegate = self
+        
+        updateCharacterCount()
         
         let datePicker = UIDatePicker()
         datePicker.datePickerMode = .date
@@ -74,6 +79,46 @@ class EditProfileViewController: UIViewController, UITextViewDelegate {
 
         // make sure the result is under 16 characters
         return updatedText.count <= 100
+    }
+    
+    // Called when 'return' key pressed
+
+    func textFieldShouldReturn(_ textField:UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    // Called when the user clicks on the view outside of the UITextField
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
+    
+    // 4 funcs To dimiss keyboard and move the textView UP/Down when the keyboard shows
+    @objc func tap(_ sender: UITapGestureRecognizer) {
+        view.endEditing(true)
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        textView.layer.borderWidth = 2
+        textView.layer.borderColor = UIColor.clear.cgColor
+        animateViewMoving(true, moveValue: 175)
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        textView.layer.borderWidth = 0
+        textView.layer.borderColor = UIColor.clear.cgColor
+        animateViewMoving(false, moveValue: 175)
+    }
+    
+    func animateViewMoving (_ up:Bool, moveValue :CGFloat){
+        let movementDuration:TimeInterval = 0.3
+        let movement:CGFloat = ( up ? -moveValue : moveValue)
+        UIView.beginAnimations( "animateView", context: nil)
+        UIView.setAnimationBeginsFromCurrentState(true)
+        UIView.setAnimationDuration(movementDuration )
+        self.view.frame = self.view.frame.offsetBy(dx: 0,  dy: movement)
+        UIView.commitAnimations()
     }
     
 
