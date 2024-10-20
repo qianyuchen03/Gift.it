@@ -34,6 +34,12 @@ class ProfileViewController: UIViewController, ProfileChanger {
             nextVC.originalBio = bioTextView.text!
             nextVC.delegate = self
         }
+        
+        if segue.identifier == "SettingsSegue",
+           let nextVC = segue.destination as?
+            SettingsViewController {
+            nextVC.delegate = self
+        }
     }
     
     func changeProfile(newName:String, newBirthday:String, newBio:String) {
