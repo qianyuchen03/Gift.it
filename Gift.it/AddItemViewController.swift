@@ -21,9 +21,9 @@ class AddItemViewController: UIViewController {
 
     @IBAction func addToWishlistTapped(_ sender: UIButton) {
 
-        var str2 = itemCostTextField.text!
+        let str2 = itemCostTextField.text!
         var itemCost = 0.0
-        if let price = Double(str2) {
+        if Double(str2) != nil {
             itemCost = Double(str2)!
         } else {
             let controller = UIAlertController(

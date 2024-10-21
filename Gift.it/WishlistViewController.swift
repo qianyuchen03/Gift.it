@@ -54,6 +54,7 @@ class WishlistViewController: UIViewController, UITableViewDataSource, UITableVi
 //        cell.accessoryView = deleteButton
         return cell
     }
+    
 
 //    @objc func deleteItem(_ sender: UIButton) {
 //        let index = sender.tag
