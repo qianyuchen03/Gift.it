@@ -22,7 +22,6 @@ class EditProfileViewController: UIViewController, UITextViewDelegate, UITextFie
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
         nameTextField.text = originalName
         birthdayTextField.text = originalBirthday
         editBioTextView.text = originalBio
@@ -31,22 +30,38 @@ class EditProfileViewController: UIViewController, UITextViewDelegate, UITextFie
         birthdayTextField.delegate = self
         editBioTextView.delegate = self
         
+        /* To set the character counter*/
         updateCharacterCount()
         
+        /* To use the date picker to edit the text field */
         let datePicker = UIDatePicker()
         datePicker.datePickerMode = .date
         datePicker.addTarget(self, action: #selector(dateChange(datePicker:)), for: UIControl.Event.valueChanged)
         datePicker.frame.size = CGSize(width: 0, height: 300)
         datePicker.preferredDatePickerStyle = .wheels
-        
         birthdayTextField.inputView = datePicker
-//        birthdayTextField.text = formatDate(date: Date()) // sets field to todays date
+        // setting initial date
+        let dateFormatterGet = DateFormatter()
+        dateFormatterGet.dateFormat = "MMMM dd, yyyy"
+        if let date = dateFormatterGet.date(from: birthdayTextField.text!) {
+            birthdayTextField.text = formatDate(date: date)
+            datePicker.date = date
+        } else {
+            birthdayTextField.text = formatDate(date: Date())
+        }
+        
+        /* To move text view when field is pressed so software keyboard does not cover it */
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: UIWindow.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillBeHidden), name: UIWindow.keyboardWillHideNotification, object: nil)
+
     }
     
     @IBAction func saveButtonPressed(_ sender: Any) {
         let otherVC = delegate as! ProfileChanger
         otherVC.changeProfile(newName: nameTextField.text!, newBirthday: birthdayTextField.text!, newBio: editBioTextView.text!)
     }
+    
+    /* To use the date picker to edit the text field */
     
     @objc func dateChange(datePicker: UIDatePicker) {
         birthdayTextField.text = formatDate(date: datePicker.date)
@@ -57,6 +72,8 @@ class EditProfileViewController: UIViewController, UITextViewDelegate, UITextFie
         formatter.dateFormat = "MMMM dd, yyyy"
         return formatter.string(from: date)
     }
+    
+    /* To set the character counter and limit */
     
     func textViewDidChange(_ textView: UITextView) {
         updateCharacterCount()
@@ -81,46 +98,32 @@ class EditProfileViewController: UIViewController, UITextViewDelegate, UITextFie
         return updatedText.count <= 100
     }
     
-    // Called when 'return' key pressed
+    /* To move text view when field is pressed so software keyboard does not cover it */
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if self.editBioTextView.isFirstResponder == true {
+            self.view.frame.origin.y -= 175
+         }
+    }
 
+    @objc func keyboardWillBeHidden(notification: NSNotification){
+        if self.editBioTextView.isFirstResponder == true {
+           self.view.frame.origin.y += 175
+        }
+    }
+    
+    /* To automatically remove keyboard when user returns or touches out of the field */
+    
+    // Called when 'return' key pressed
     func textFieldShouldReturn(_ textField:UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
     
     // Called when the user clicks on the view outside of the UITextField
-
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
-    
-    // 4 funcs To dimiss keyboard and move the textView UP/Down when the keyboard shows
-    @objc func tap(_ sender: UITapGestureRecognizer) {
-        view.endEditing(true)
-    }
-    
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        textView.layer.borderWidth = 2
-        textView.layer.borderColor = UIColor.clear.cgColor
-        animateViewMoving(true, moveValue: 175)
-    }
-    
-    func textViewDidEndEditing(_ textView: UITextView) {
-        textView.layer.borderWidth = 0
-        textView.layer.borderColor = UIColor.clear.cgColor
-        animateViewMoving(false, moveValue: 175)
-    }
-    
-    func animateViewMoving (_ up:Bool, moveValue :CGFloat){
-        let movementDuration:TimeInterval = 0.3
-        let movement:CGFloat = ( up ? -moveValue : moveValue)
-        UIView.beginAnimations( "animateView", context: nil)
-        UIView.setAnimationBeginsFromCurrentState(true)
-        UIView.setAnimationDuration(movementDuration )
-        self.view.frame = self.view.frame.offsetBy(dx: 0,  dy: movement)
-        UIView.commitAnimations()
-    }
-    
 
     /*
     // MARK: - Navigation
