@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import FirebaseAuth
+import SwiftUI
 
 class SettingsViewController: UIViewController {
     
@@ -27,6 +29,16 @@ class SettingsViewController: UIViewController {
         bdaySwitch.isOn = false
         notifSwitch.isOn = false
         // Do any additional setup after loading the view.
+    }
+    @IBAction func logoutButtonPressed(_ sender: Any) {
+        do{
+            try Auth.auth().signOut()
+            self.performSegue(withIdentifier: "LoginbackSegue", sender: nil)
+
+//            self.dismiss(animated: true)
+        } catch {
+            print("Sign Out Error")
+        }
     }
     
     @IBAction func hideBdaySwitch(_ sender: Any) {

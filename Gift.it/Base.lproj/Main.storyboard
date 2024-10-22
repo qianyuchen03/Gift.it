@@ -17,7 +17,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Username" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8yf-mv-V2K">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Email" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8yf-mv-V2K">
                                 <rect key="frame" x="66" y="198" width="82" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="82" id="Cw8-8J-p3B"/>
@@ -90,9 +90,19 @@
                                     <color key="baseBackgroundColor" red="0.94901960780000005" green="0.59999999999999998" blue="0.69411764710000001" alpha="0.5" colorSpace="custom" customColorSpace="displayP3"/>
                                 </buttonConfiguration>
                                 <connections>
-                                    <segue destination="Jl5-LJ-fPM" kind="presentation" identifier="LoginSeque" modalPresentationStyle="overCurrentContext" id="ivd-tf-mAa"/>
+                                    <action selector="loginButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rMx-Pl-Vzv"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" restorationIdentifier="errorLabel" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="76l-fB-Pho">
+                                <rect key="frame" x="8" y="534" width="377" height="86"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="86" id="KNt-uy-mNS"/>
+                                    <constraint firstAttribute="width" constant="377" id="vIR-4B-Qkq"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" systemColor="systemRedColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -100,6 +110,7 @@
                             <constraint firstItem="gm2-rh-OJb" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="39" id="0j1-Ue-LBm"/>
                             <constraint firstItem="Xkt-9E-RwB" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="3uw-bK-nFo"/>
                             <constraint firstItem="gm2-rh-OJb" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="5rX-JT-rYc"/>
+                            <constraint firstItem="76l-fB-Pho" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="7GU-Gq-92I"/>
                             <constraint firstItem="Xkt-9E-RwB" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-183" id="J4Q-El-kpF"/>
                             <constraint firstItem="TEw-56-AEY" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-118" id="Jqe-GE-hiu"/>
                             <constraint firstItem="TEw-56-AEY" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-118" id="LCe-Li-e99"/>
@@ -111,6 +122,7 @@
                             <constraint firstItem="8yf-mv-V2K" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-218" id="Vbb-Tx-wZp"/>
                             <constraint firstItem="TEw-56-AEY" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="-89.5" id="Y3f-Hn-xHE"/>
                             <constraint firstItem="b0j-Ad-Gma" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="82.5" id="cFQ-gu-jSr"/>
+                            <constraint firstItem="76l-fB-Pho" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="151" id="cXs-sj-6Ja"/>
                             <constraint firstItem="8yf-mv-V2K" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-218" id="dgY-K8-4Zm"/>
                             <constraint firstItem="b0j-Ad-Gma" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="eoi-NF-TEd"/>
                             <constraint firstItem="b0j-Ad-Gma" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="fYP-lM-r6n"/>
@@ -124,10 +136,16 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="tJA-3w-qJd"/>
+                    <connections>
+                        <outlet property="emailField" destination="Xkt-9E-RwB" id="gqo-c8-CKa"/>
+                        <outlet property="errorField" destination="76l-fB-Pho" id="sa8-0T-Fch"/>
+                        <outlet property="passwordField" destination="H80-KW-iEN" id="0D4-de-7ZW"/>
+                        <segue destination="Jl5-LJ-fPM" kind="presentation" identifier="LoginSegue" modalPresentationStyle="fullScreen" id="RNs-vH-3Q1"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="932.06106870229007" y="-2.1126760563380285"/>
+            <point key="canvasLocation" x="925.95419847328242" y="-2.1126760563380285"/>
         </scene>
         <!--Create Profile View Controller-->
         <scene sceneID="dNt-J6-MiJ">
@@ -186,7 +204,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xp8-fq-Alw">
-                                <rect key="frame" x="66" y="645" width="261" height="36"/>
+                                <rect key="frame" x="66" y="626.66666666666663" width="261" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="261" id="AhQ-I3-ew4"/>
                                     <constraint firstAttribute="height" constant="36" id="ohj-oE-l4w"/>
@@ -804,9 +822,33 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a82-5S-It7">
+                                <rect key="frame" x="120.66666666666669" y="781.66666666666663" width="152" height="36"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="152" id="VRl-GT-kwv"/>
+                                    <constraint firstAttribute="height" constant="36" id="kne-1A-Up5"/>
+                                </constraints>
+                                <color key="tintColor" red="0.94901960780000005" green="0.59999999999999998" blue="0.69411764710000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Logout">
+                                    <fontDescription key="titleFontDescription" name="CourierNewPSMT" family="Courier New" pointSize="23"/>
+                                    <color key="baseForegroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="baseBackgroundColor" red="0.94901960780000005" green="0.59999999999999998" blue="0.69411764710000001" alpha="0.5" colorSpace="custom" customColorSpace="displayP3"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="logoutButtonPressed:" destination="fPB-ZJ-CzU" eventType="touchUpInside" id="2qy-9d-VyA"/>
+                                    <segue destination="Ibt-nb-hyl" kind="presentation" identifier="LoginbackSegue" modalPresentationStyle="fullScreen" id="OD2-qU-3h5"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="AOP-FV-vgb"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="a82-5S-It7" firstAttribute="centerY" secondItem="iX5-Zn-XgH" secondAttribute="centerY" constant="352" id="4kk-OZ-zjR"/>
+                            <constraint firstItem="a82-5S-It7" firstAttribute="centerY" secondItem="iX5-Zn-XgH" secondAttribute="centerY" constant="373.5" id="6KV-mV-IZQ"/>
+                            <constraint firstItem="a82-5S-It7" firstAttribute="centerX" secondItem="iX5-Zn-XgH" secondAttribute="centerX" constant="72.5" id="7rH-Id-3Ma"/>
+                            <constraint firstItem="a82-5S-It7" firstAttribute="centerX" secondItem="iX5-Zn-XgH" secondAttribute="centerX" id="hbI-VU-nB5"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Fp9-r0-wCH"/>
                     <connections>
@@ -982,8 +1024,9 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Ibt-nb-hyl" sceneMemberID="viewController">
                     <toolbarItems/>
+                    <navigationItem key="navigationItem" id="Aq6-Ha-1ni"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="fOD-BR-kHS">
-                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -997,7 +1040,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="ou1-tn-kEh"/>
+        <segue reference="RNs-vH-3Q1"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.94901960780000005" green="0.59999999999999998" blue="0.69411764710000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
     <resources>
@@ -1017,7 +1060,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
