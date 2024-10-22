@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import FirebaseCore
+import FirebaseFirestore
 
 protocol ProfileChanger {
     
@@ -20,10 +22,16 @@ class ProfileViewController: UIViewController, ProfileChanger {
     @IBOutlet weak var birthdayLabel: UILabel!
     @IBOutlet weak var bioTextView: UITextView!
     
+    var db: Firestore!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(false)
+        db = Firestore.firestore()
+        getUserProfile()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -42,21 +50,42 @@ class ProfileViewController: UIViewController, ProfileChanger {
         }
     }
     
+    func getUserProfile() {
+        let docRef = db.collection("users").document("LtzJQ7dWkShVuFu1qu0B4d3qKhl2")
+
+        docRef.getDocument { (document, error) in
+            guard error == nil else {
+                print("error", error ?? "")
+                return
+            }
+
+            if let document = document, document.exists {
+                let data = document.data()
+                if let data = data {
+                    print("data", data)
+                    self.nameLabel.text = data["name"] as? String ?? ""
+                    self.usernameLabel.text = data["username"] as? String ?? ""
+                    self.birthdayLabel.text = data["birthday"] as? String ?? ""
+                    self.bioTextView.text = data["bio"] as? String ?? "Edit profile to add bio"
+                }
+            }
+
+        }
+    }
+    
     func changeProfile(newName:String, newBirthday:String, newBio:String) {
         nameLabel.text = newName
         birthdayLabel.text = newBirthday
         bioTextView.text = newBio
+        
+        let docRef = db.collection("users").document("LtzJQ7dWkShVuFu1qu0B4d3qKhl2")
+        
+        docRef.updateData([
+            "name": newName,
+            "birthday": newBirthday,
+            "bio": newBio
+        ])
+            
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
