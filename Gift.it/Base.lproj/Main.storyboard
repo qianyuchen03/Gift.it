@@ -204,7 +204,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xp8-fq-Alw">
-                                <rect key="frame" x="66" y="626.66666666666663" width="261" height="36"/>
+                                <rect key="frame" x="66" y="550.66666666666663" width="261" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="261" id="AhQ-I3-ew4"/>
                                     <constraint firstAttribute="height" constant="36" id="ohj-oE-l4w"/>
@@ -218,7 +218,6 @@
                                 </buttonConfiguration>
                                 <connections>
                                     <action selector="createAccountButtonTapped:" destination="esa-9F-ZGZ" eventType="touchUpInside" id="T2P-ZO-wGZ"/>
-                                    <segue destination="Jl5-LJ-fPM" kind="presentation" identifier="CreatedProfileSegue" modalPresentationStyle="overCurrentContext" id="ou1-tn-kEh"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xfI-ap-mGR">
@@ -228,16 +227,6 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" systemColor="systemRedColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Create Your Account" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uFw-Th-SpF">
-                                <rect key="frame" x="48.333333333333343" y="202" width="296.66666666666663" height="20"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="20" id="1Px-qc-eWL"/>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="250" id="ly0-uM-ggY"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="26"/>
-                                <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="person.crop.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="h6K-IP-AOm">
@@ -259,6 +248,16 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Create Your Account" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uFw-Th-SpF">
+                                <rect key="frame" x="48" y="126" width="296.66666666666663" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="1Px-qc-eWL"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="250" id="ly0-uM-ggY"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="26"/>
+                                <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="gA0-JM-K0D"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -286,6 +285,7 @@
                             <constraint firstItem="oMy-Xn-Li5" firstAttribute="centerX" secondItem="VWd-tl-k9W" secondAttribute="centerX" id="i1B-Af-78M"/>
                             <constraint firstItem="sU6-8C-wap" firstAttribute="centerX" secondItem="uFw-Th-SpF" secondAttribute="centerX" id="li7-t3-3Vq"/>
                             <constraint firstItem="h6K-IP-AOm" firstAttribute="top" secondItem="uFw-Th-SpF" secondAttribute="bottom" constant="41.333333333333343" id="m4O-Mr-zIb"/>
+                            <constraint firstItem="uFw-Th-SpF" firstAttribute="top" secondItem="gA0-JM-K0D" secondAttribute="top" constant="23" id="r5K-Ny-a4L"/>
                             <constraint firstItem="VWd-tl-k9W" firstAttribute="centerX" secondItem="uFw-Th-SpF" secondAttribute="centerX" id="to6-Hw-hJi"/>
                             <constraint firstItem="oMy-Xn-Li5" firstAttribute="top" secondItem="BU5-Ab-VXk" secondAttribute="bottom" constant="23" id="vfw-Xn-oqV"/>
                         </constraints>
@@ -298,22 +298,23 @@
                         <outlet property="nameField" destination="VWd-tl-k9W" id="nzD-NT-oRx"/>
                         <outlet property="passwordField" destination="RrN-Oq-xsQ" id="ppr-0A-Kgc"/>
                         <outlet property="usernameField" destination="oMy-Xn-Li5" id="pgq-tA-Nlr"/>
+                        <segue destination="Jl5-LJ-fPM" kind="presentation" identifier="CreatedProfileSegue" id="n3i-JX-fU9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N8R-g9-ivc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2019" y="-2"/>
+            <point key="canvasLocation" x="2033" y="-2"/>
         </scene>
         <!--Calendar-->
         <scene sceneID="BXD-KV-hjd">
             <objects>
                 <viewController id="vgh-Qp-lrE" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="GcR-uy-uNM">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Calendar" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1hm-cQ-aPr">
-                                <rect key="frame" x="146" y="114" width="101" height="24"/>
+                                <rect key="frame" x="146" y="109" width="101" height="24"/>
                                 <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="21"/>
                                 <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -340,11 +341,11 @@
             <objects>
                 <viewController id="8Ip-DK-sNW" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="UJl-Dg-TW5">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My Friends" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j1K-oy-ZoL">
-                                <rect key="frame" x="133" y="114" width="127" height="24"/>
+                                <rect key="frame" x="133" y="109" width="127" height="24"/>
                                 <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="21"/>
                                 <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -399,11 +400,11 @@
             <objects>
                 <viewController storyboardIdentifier="GiftingGroup" id="A5Z-Cv-fes" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="lpx-4a-IEq">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gifting Groups" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cqQ-yY-AQo">
-                                <rect key="frame" x="108" y="114" width="177" height="24"/>
+                                <rect key="frame" x="108" y="109" width="177" height="24"/>
                                 <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="21"/>
                                 <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -431,11 +432,11 @@
             <objects>
                 <viewController id="LAu-PH-hc2" customClass="WishlistViewController" customModule="Gift_it" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9Nd-N0-cmW">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wishlist" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jbd-Y1-bBP">
-                                <rect key="frame" x="146" y="114" width="101" height="24"/>
+                                <rect key="frame" x="146" y="109" width="101" height="24"/>
                                 <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="21"/>
                                 <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -569,29 +570,29 @@
             <objects>
                 <viewController id="cen-Mp-uSD" customClass="ProfileViewController" customModule="Gift_it" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Plv-PE-AcL">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Profile" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jmM-II-yDI">
-                                <rect key="frame" x="152" y="94" width="89" height="24"/>
+                                <rect key="frame" x="152" y="89" width="89" height="24"/>
                                 <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="21"/>
                                 <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4QU-Aj-yKa">
-                                <rect key="frame" x="183" y="362" width="27.333333333333343" height="51"/>
+                                <rect key="frame" x="183" y="357" width="27.333333333333343" height="51"/>
                                 <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="45"/>
                                 <color key="textColor" red="0.45098039215686275" green="0.22352941176470587" blue="0.30588235294117649" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kb4-PF-mQr">
-                                <rect key="frame" x="190.33333333333334" y="421" width="12.333333333333343" height="23"/>
+                                <rect key="frame" x="190.33333333333334" y="416" width="12.333333333333343" height="23"/>
                                 <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="20"/>
                                 <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="16" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fsn-NY-bfF">
-                                <rect key="frame" x="69" y="515" width="289" height="37"/>
+                                <rect key="frame" x="69" y="510" width="289" height="37"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="289" id="Xea-i4-8Mr"/>
                                 </constraints>
@@ -600,7 +601,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t5W-si-oc2">
-                                <rect key="frame" x="312" y="83.666666666666671" width="51" height="45.000000000000014"/>
+                                <rect key="frame" x="312" y="78.666666666666671" width="51" height="45"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="45" id="dSv-Gh-11d"/>
                                 </constraints>
@@ -613,7 +614,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="asa-Ms-8Wa">
-                                <rect key="frame" x="29.999999999999996" y="84.666666666666671" width="50.666666666666657" height="45.000000000000014"/>
+                                <rect key="frame" x="29.999999999999996" y="79.666666666666671" width="50.666666666666657" height="45"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="45" id="Wye-N1-tyG"/>
                                 </constraints>
@@ -626,7 +627,7 @@
                                 </connections>
                             </button>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Z39-4h-7rT">
-                                <rect key="frame" x="35" y="522" width="34" height="24"/>
+                                <rect key="frame" x="35" y="517" width="34" height="24"/>
                                 <color key="tintColor" systemColor="labelColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="18" id="cgR-de-l4F"/>
@@ -635,7 +636,7 @@
                                 <imageReference key="image" image="gift" catalog="system" symbolScale="large"/>
                             </imageView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text=" " selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AMh-Of-KsW">
-                                <rect key="frame" x="33" y="560" width="325" height="115"/>
+                                <rect key="frame" x="33" y="555" width="325" height="115"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="115" id="lMx-g4-mBq"/>
@@ -646,7 +647,7 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="doris-pfp" translatesAutoresizingMaskIntoConstraints="NO" id="wB8-E6-xUs">
-                                <rect key="frame" x="90.666666666666686" y="181" width="212" height="149"/>
+                                <rect key="frame" x="90.666666666666686" y="176" width="212" height="149"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="149" id="UBG-5o-Bsb"/>
                                     <constraint firstAttribute="width" constant="212" id="gKP-mo-LKw"/>
@@ -695,7 +696,7 @@
             <objects>
                 <viewController id="fPB-ZJ-CzU" customClass="SettingsViewController" customModule="Gift_it" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="iX5-Zn-XgH">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Settings" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zDT-KL-dxp">
@@ -823,7 +824,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a82-5S-It7">
-                                <rect key="frame" x="120.66666666666669" y="781.66666666666663" width="152" height="36"/>
+                                <rect key="frame" x="193" y="776.66666666666663" width="152" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="152" id="VRl-GT-kwv"/>
                                     <constraint firstAttribute="height" constant="36" id="kne-1A-Up5"/>
@@ -868,30 +869,30 @@
             <objects>
                 <viewController id="KB5-PO-Tcw" customClass="EditProfileViewController" customModule="Gift_it" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="536-Yi-9VD">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="doris-pfp" translatesAutoresizingMaskIntoConstraints="NO" id="iLb-8q-N4Z">
-                                <rect key="frame" x="62.666666666666657" y="133" width="268" height="149"/>
+                                <rect key="frame" x="62.666666666666657" y="145" width="268" height="149"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="268" id="CdT-yr-DCC"/>
                                     <constraint firstAttribute="height" constant="149" id="li4-IC-oQS"/>
                                 </constraints>
                             </imageView>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="Doris" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3jA-kN-EcL">
-                                <rect key="frame" x="25" y="306" width="343" height="52.666666666666686"/>
+                                <rect key="frame" x="25" y="318" width="343" height="52.666666666666686"/>
                                 <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="45"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Edit Profile" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MdS-nx-CCZ">
-                                <rect key="frame" x="120.66666666666669" y="54" width="152" height="24"/>
+                                <rect key="frame" x="120.66666666666669" y="66" width="152" height="24"/>
                                 <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="21"/>
                                 <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="October 3, 1988" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JlC-pF-zHN">
-                                <rect key="frame" x="93" y="441" width="244" height="30"/>
+                                <rect key="frame" x="93" y="453" width="244" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="244" id="gJg-sS-5UZ"/>
                                 </constraints>
@@ -899,7 +900,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="8gJ-qy-I8X">
-                                <rect key="frame" x="55" y="445" width="33" height="23"/>
+                                <rect key="frame" x="55" y="457" width="33" height="23"/>
                                 <color key="tintColor" systemColor="labelColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="17" id="VmO-JO-NLP"/>
@@ -908,13 +909,13 @@
                                 <imageReference key="image" image="gift" catalog="system" symbolScale="large"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@doris_username" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Phz-7W-y1R">
-                                <rect key="frame" x="106" y="371" width="181" height="23"/>
+                                <rect key="frame" x="106" y="383" width="181" height="23"/>
                                 <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="20"/>
                                 <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2za-pk-HzR">
-                                <rect key="frame" x="34" y="503" width="325" height="115"/>
+                                <rect key="frame" x="34" y="515" width="325" height="115"/>
                                 <color key="backgroundColor" red="0.94901960784313721" green="0.93725490196078431" blue="0.86274509803921573" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="325" id="vBd-Z2-DjT"/>
@@ -925,13 +926,13 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="------------------------------------------------------" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O1o-CH-2Bw">
-                                <rect key="frame" x="34" y="350" width="325" height="12"/>
+                                <rect key="frame" x="34" y="362" width="325" height="12"/>
                                 <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="10"/>
                                 <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="----------------------------------------" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KDB-Cq-PhW">
-                                <rect key="frame" x="97" y="468" width="241" height="12"/>
+                                <rect key="frame" x="97" y="480" width="241" height="12"/>
                                 <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="10"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -943,7 +944,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="urr-TR-eb6">
-                                <rect key="frame" x="144" y="668" width="105" height="41"/>
+                                <rect key="frame" x="144" y="680" width="105" height="41"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="41" id="QRO-m0-DTl"/>
                                     <constraint firstAttribute="width" constant="105" id="wRg-W3-L31"/>
@@ -1007,7 +1008,7 @@
                     <tabBarItem key="tabBarItem" title="Profile" image="person.crop.circle" catalog="system" id="Lfz-RU-sad"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="QZk-qw-W2u">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="44"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="56"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -1040,7 +1041,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="RNs-vH-3Q1"/>
+        <segue reference="n3i-JX-fU9"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.94901960780000005" green="0.59999999999999998" blue="0.69411764710000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
     <resources>
@@ -1060,7 +1061,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
