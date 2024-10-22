@@ -22,7 +22,7 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func signUpButtonTapped(_ sender: Any) {
-        performSegue(withIdentifier: "CreateProfileSegue", sender: self)
+        //performSegue(withIdentifier: "CreateProfileSegue", sender: self)
     }
     
 

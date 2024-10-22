@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ibt-nb-hyl">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
@@ -73,7 +73,7 @@
                                 </buttonConfiguration>
                                 <connections>
                                     <action selector="signUpButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ghR-sm-I7E"/>
-                                    <segue destination="esa-9F-ZGZ" kind="presentation" identifier="CreateProfileSegue" modalPresentationStyle="fullScreen" id="F36-Ex-h7X"/>
+                                    <segue destination="esa-9F-ZGZ" kind="show" identifier="CreateProfileSegue" id="F36-Ex-h7X"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gm2-rh-OJb">
@@ -123,10 +123,11 @@
                             <constraint firstItem="TEw-56-AEY" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="-89.5" id="xfo-Ng-PTO"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="tJA-3w-qJd"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5.343511450381679" y="-2.1126760563380285"/>
+            <point key="canvasLocation" x="932.06106870229007" y="-2.1126760563380285"/>
         </scene>
         <!--Create Profile View Controller-->
         <scene sceneID="dNt-J6-MiJ">
@@ -185,7 +186,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xp8-fq-Alw">
-                                <rect key="frame" x="66" y="523.66666666666663" width="261" height="36"/>
+                                <rect key="frame" x="66" y="626.66666666666663" width="261" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="261" id="AhQ-I3-ew4"/>
                                     <constraint firstAttribute="height" constant="36" id="ohj-oE-l4w"/>
@@ -212,7 +213,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Create Your Account" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uFw-Th-SpF">
-                                <rect key="frame" x="48.333333333333343" y="99" width="296.66666666666663" height="20"/>
+                                <rect key="frame" x="48.333333333333343" y="202" width="296.66666666666663" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="1Px-qc-eWL"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="250" id="ly0-uM-ggY"/>
@@ -283,7 +284,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N8R-g9-ivc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1070.9923664122136" y="9.8591549295774659"/>
+            <point key="canvasLocation" x="2019" y="-2"/>
         </scene>
         <!--Calendar-->
         <scene sceneID="BXD-KV-hjd">
@@ -976,6 +977,24 @@
             </objects>
             <point key="canvasLocation" x="3948.8549618320608" y="1797.8873239436621"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="PGo-iC-ici">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Ibt-nb-hyl" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="fOD-BR-kHS">
+                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="GGd-1z-dla"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Eol-Ge-dpI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5.343511450381679" y="-2.1126760563380285"/>
+        </scene>
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="ou1-tn-kEh"/>
@@ -998,7 +1017,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
