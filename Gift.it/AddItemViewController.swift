@@ -9,8 +9,8 @@ import UIKit
 
 class AddItemViewController: UIViewController {
     
-    @IBOutlet weak var itemNameTextField: UITextField!
     @IBOutlet weak var itemCostTextField: UITextField!
+    @IBOutlet weak var itemNameTextField: UITextField!
     
     var delegate: AddItemDelegate?
 
@@ -23,20 +23,27 @@ class AddItemViewController: UIViewController {
 
         let str2 = itemCostTextField.text!
         var itemCost = 0.0
-        if Double(str2) != nil {
-            itemCost = Double(str2)!
-        } else {
-            let controller = UIAlertController(
-                title: "Invalid input",
-                message: "Please enter a numerical price",
-                preferredStyle: .alert)
-            controller.addAction(UIAlertAction(title: "OK", style: .default))
-            present(controller, animated: true)
-        }
         
-        let itemName = itemNameTextField.text!
-        delegate?.didAddItem(name: itemName, cost: itemCost)
+        if itemNameTextField.text!.isEmpty {
+            showError(message: "Missing Item Name")
+        } else if Double(str2) == nil {
+            showError(message: "Please enter a numerical value")
+        } else {
+            itemCost = Double(str2)!
+            let itemName = itemNameTextField.text!
+            delegate?.didAddItem(name: itemName, cost: itemCost)
+        }
+    
         dismiss(animated: true, completion: nil)
+    }
+    
+    func showError(message: String) {
+        let controller = UIAlertController(
+            title: "Invalid input",
+            message: message,
+            preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: "OK", style: .default))
+        present(controller, animated: true)
     }
     
     @IBAction func closeTapped(_ sender: UIButton) {

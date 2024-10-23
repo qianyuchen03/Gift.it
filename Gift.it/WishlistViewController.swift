@@ -13,7 +13,7 @@ protocol AddItemDelegate {
     
 extension WishlistViewController: AddItemDelegate {
     func didAddItem(name: String, cost: Double) {
-        wishlistItems.append((name: name, cost: cost))
+        wishlistItems.append((name, cost))
         wishlistTableView.reloadData()
     }
 }
@@ -23,7 +23,8 @@ class WishlistViewController: UIViewController, UITableViewDataSource, UITableVi
     var wishlistItems: [(name: String, cost: Double)] = []
     
     @IBOutlet weak var wishlistTableView: UITableView!
-
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         wishlistTableView.dataSource = self
@@ -44,23 +45,19 @@ class WishlistViewController: UIViewController, UITableViewDataSource, UITableVi
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "WishlistItemCell", for: indexPath)
+        cell.textLabel?.font = UIFont(name: "Courier New Bold", size: 20)
         cell.textLabel?.text = "\(wishlistItems[indexPath.row].name) - $\(wishlistItems[indexPath.row].cost)"
         
-        // Add an "X" button to delete the item
-//        let deleteButton = UIButton(type: .system)
-//        deleteButton.setTitle("X", for: .normal)
-//        deleteButton.addTarget(self, action: #selector(deleteItem(_:)), for: .touchUpInside)
-//        deleteButton.tag = indexPath.row
-//        cell.accessoryView = deleteButton
         return cell
     }
     
-
-//    @objc func deleteItem(_ sender: UIButton) {
-//        let index = sender.tag
-//        wishlistItems.remove(at: index)
-//        wishlistTableView.reloadData()
-//    }
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            wishlistItems.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+    }
+    
 }
 
 
