@@ -13,16 +13,19 @@ class EditProfileViewController: UIViewController, UITextViewDelegate, UITextFie
     @IBOutlet weak var birthdayTextField: UITextField!
     @IBOutlet weak var editBioTextView: UITextView!
     @IBOutlet weak var characterCounterLabel: UILabel!
+    @IBOutlet weak var usernameLabel: UILabel!
     
     var originalName = ""
     var originalBirthday = ""
     var originalBio = ""
     var delegate: UIViewController!
+    var username = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         nameTextField.text = originalName
+        usernameLabel.text = username
         birthdayTextField.text = originalBirthday
         editBioTextView.text = originalBio == "Edit profile to add bio" ? "" : originalBio
         
@@ -49,10 +52,6 @@ class EditProfileViewController: UIViewController, UITextViewDelegate, UITextFie
         } else {
             birthdayTextField.text = formatDate(date: Date())
         }
-        
-        /* To move text view when field is pressed so software keyboard does not cover it */
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: UIWindow.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillBeHidden), name: UIWindow.keyboardWillHideNotification, object: nil)
 
     }
     
@@ -96,20 +95,6 @@ class EditProfileViewController: UIViewController, UITextViewDelegate, UITextFie
 
         // make sure the result is under 16 characters
         return updatedText.count <= 100
-    }
-    
-    /* To move text view when field is pressed so software keyboard does not cover it */
-    
-    @objc func keyboardWillShow(notification: NSNotification) {
-        if self.editBioTextView.isFirstResponder == true {
-            self.view.frame.origin.y -= 175
-         }
-    }
-
-    @objc func keyboardWillBeHidden(notification: NSNotification){
-        if self.editBioTextView.isFirstResponder == true {
-           self.view.frame.origin.y += 175
-        }
     }
     
     /* To automatically remove keyboard when user returns or touches out of the field */

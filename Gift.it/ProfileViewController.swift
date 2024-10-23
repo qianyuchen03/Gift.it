@@ -8,6 +8,7 @@
 import UIKit
 import FirebaseCore
 import FirebaseFirestore
+import FirebaseAuth
 
 protocol ProfileChanger {
     
@@ -23,6 +24,7 @@ class ProfileViewController: UIViewController, ProfileChanger {
     @IBOutlet weak var bioTextView: UITextView!
     
     var db: Firestore!
+    let uid = Auth.auth().currentUser!.uid
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +40,7 @@ class ProfileViewController: UIViewController, ProfileChanger {
         if segue.identifier == "EditProfileSegueIdentifier",
            let nextVC = segue.destination as? EditProfileViewController {
             nextVC.originalName = nameLabel.text!
+            nextVC.username = usernameLabel.text!
             nextVC.originalBirthday = birthdayLabel.text!
             nextVC.originalBio = bioTextView.text!
             nextVC.delegate = self
@@ -51,7 +54,7 @@ class ProfileViewController: UIViewController, ProfileChanger {
     }
     
     func getUserProfile() {
-        let docRef = db.collection("users").document("LtzJQ7dWkShVuFu1qu0B4d3qKhl2")
+        let docRef = db.collection("users").document(uid)
 
         docRef.getDocument { (document, error) in
             guard error == nil else {
@@ -78,7 +81,7 @@ class ProfileViewController: UIViewController, ProfileChanger {
         birthdayLabel.text = newBirthday
         bioTextView.text = newBio
         
-        let docRef = db.collection("users").document("LtzJQ7dWkShVuFu1qu0B4d3qKhl2")
+        let docRef = db.collection("users").document(uid)
         
         docRef.updateData([
             "name": newName,
