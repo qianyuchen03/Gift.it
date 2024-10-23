@@ -54,25 +54,30 @@ class CreateProfileViewController: UIViewController {
     }
     
     @IBAction func createAccountButtonTapped(_ sender: Any) {
-        var valid = validateFields()
-        print("The user info was \(valid)")
-        if valid == "" {
-            // Step 2: Only if validation passes, create the Firebase account
-            Auth.auth().createUser(withEmail: emailField.text!, password: passwordField.text!) { authResult, error in
-                if let error = error as NSError? {
-                    // Display Firebase authentication error
-                    self.errorMessage.text = "Error: \(error.localizedDescription)"
-                } else {
-                    // Step 3: If Firebase account creation is successful, save data to Firestore
-                    self.saveUserDataToFirestore()
-
-                }
-            }
-        }
+        if validateFields() {
+               // Step 1: Check if username is unique
+               checkUsernameUnique { isUnique in
+                   if isUnique {
+                       // Step 2: If username is unique, create Firebase user
+                       Auth.auth().createUser(withEmail: self.emailField.text!, password: self.passwordField.text!) { authResult, error in
+                           if let error = error as NSError? {
+                               // Handle error in Firebase Authentication
+                               self.errorMessage.text = "Error: \(error.localizedDescription)"
+                           } else {
+                               // Step 3: Save the user data to Firestore if authentication is successful
+                               self.saveUserDataToFirestore()
+                           }
+                       }
+                   } else {
+                       // Display error if username is not unique
+                       self.errorMessage.text = "Username already exists. Please choose a different one."
+                   }
+               }
+           }
     }
     
     // Validate all input fields with specific error messages
-        func validateFields() -> String {
+        func validateFields() -> Bool{
             var validationMessages: [String] = []
             
             // Check if name is filled
@@ -108,12 +113,12 @@ class CreateProfileViewController: UIViewController {
             if !validationMessages.isEmpty {
                 errorMessage.text = validationMessages.joined(separator: "\n")
                 print(errorMessage.text!)
-                return errorMessage.text!
+                return false
             }
             
             // Clear the error message if everything is valid
             errorMessage.text = ""
-            return ""
+            return true
         }
     
     // Helper function to check valid email format
@@ -150,16 +155,32 @@ class CreateProfileViewController: UIViewController {
                 }
             }
         }
-    }
     
-    /*
-    // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+
+    // Function to check if the username is unique
+    func checkUsernameUnique(completion: @escaping (Bool) -> Void) {
+        let db = Firestore.firestore()
+        
+        // Query Firestore for any users with the same username
+        db.collection("users").whereField("username", isEqualTo: usernameField.text ?? "")
+            .getDocuments { querySnapshot, error in
+                if let error = error {
+                    print("Error checking username uniqueness: \(error)")
+                    completion(false)
+                } else {
+                    if let documents = querySnapshot?.documents, !documents.isEmpty {
+                        // Username already exists
+                        completion(false)
+                    } else {
+                        // Username is unique
+                        completion(true)
+                    }
+                }
+            }
+        
     }
-    */
+}
+
 
 
