@@ -8,6 +8,9 @@
 import UIKit
 import MessageKit
 import InputBarAccessoryView
+import FirebaseCore
+import FirebaseFirestore
+import FirebaseAuth
 
 struct Message: MessageType {
     var sender: any MessageKit.SenderType
@@ -22,6 +25,17 @@ struct Sender: SenderType {
     var displayName: String
 }
 
+struct MessageData: Codable {
+    var content: String
+    var date: Date
+    var id: String
+    var senderId: String
+}
+
+struct AllMessagesData: Codable {
+    var messages: [MessageData]
+}
+
 class ChatViewController: MessagesViewController {
     
     public static var dateFormatter: DateFormatter = {
@@ -32,14 +46,19 @@ class ChatViewController: MessagesViewController {
         return formatter
     }()
     
-    public var isNewConversation = false // TODO MAYBE CHANGE THIS DEPENDING ON NEEDS
+    var db: Firestore!
+    let uid = Auth.auth().currentUser!.uid
     
-    private var messages = [Message]()
-    
-    private let selfSender = Sender(photoURL: "", senderId: "1", displayName: "Doris") // TODO CHANGE THIS
+    let selfSender = Sender(photoURL: "", senderId: "1", displayName: "Doris") // TODO CHANGE THIS
+    let conversationId = "dqUzhK0Njia6fVucPHns"
+    var isNewConversation = false // TODO MAYBE CHANGE THIS DEPENDING ON NEEDS
+    var messages = [Message]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        db = Firestore.firestore()
+        
         self.title = "Donkey's Birthday" // TODO CHANGE THIS
         
         messagesCollectionView.messagesDataSource = self
@@ -47,8 +66,9 @@ class ChatViewController: MessagesViewController {
         messagesCollectionView.messagesDisplayDelegate = self
         messageInputBar.delegate = self
         
+//        getAllMessagesForConversation()
+        
         listenForMessages()
-        messagesCollectionView.reloadData()
     }
     
     func createMessageId() -> String {
@@ -62,14 +82,49 @@ class ChatViewController: MessagesViewController {
     }
     
     func listenForMessages() {
-        // TODO
+        db.collection("chats").document(conversationId)
+          .addSnapshotListener { documentSnapshot, error in
+            guard let document = documentSnapshot else {
+              print("Error fetching document: \(error!)")
+              return
+            }
+              do {
+                  let allMessages = try document.data(as: AllMessagesData.self)
+                  self.messages = allMessages.messages.map {message in
+                      let sender = Sender(photoURL: "", senderId: message.senderId, displayName: "hi")
+                      return Message(sender: sender, messageId: message.id, sentDate: message.date, kind: .text(message.content))
+                  }
+                  print(self.messages)
+                  self.messagesCollectionView.reloadData()
+              }
+              catch {
+                print(error)
+              }
+          }
     }
     
     /* Database management */
     
-    func getAllMessagesForConversation(with id: String, completion: @escaping (Result<String, Error>) -> Void) {
-        // TODO
-    }
+//    func getAllMessagesForConversation() {
+//        let docRef = db.collection("chats").document(conversationId)
+//
+//        docRef.getDocument { (document, error) in
+//            guard error == nil else {
+//                print("error", error ?? "")
+//                return
+//            }
+//
+//            if let document = document, document.exists {
+//                let data = document.data()
+//                if let data = data {
+//                    print("data", data)
+//                    let messagesData = data["messages"]
+//                    print(messagesData)
+//                }
+//            }
+//
+//        }
+//    }
     
     func sendMessage(to conversation: String, message: Message, completion: @escaping (Bool) -> Void) {
          // TODO
