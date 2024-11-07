@@ -6,6 +6,9 @@
 //
 
 import UIKit
+import FirebaseCore
+import FirebaseFirestore
+import FirebaseAuth
 
 protocol AddItemDelegate {
     func didAddItem(name: String, cost: Double)
@@ -14,6 +17,7 @@ protocol AddItemDelegate {
 extension WishlistViewController: AddItemDelegate {
     func didAddItem(name: String, cost: Double) {
         wishlistItems.append((name, cost))
+        updateWishlist()
         wishlistTableView.reloadData()
     }
 }
@@ -24,11 +28,54 @@ class WishlistViewController: UIViewController, UITableViewDataSource, UITableVi
     
     @IBOutlet weak var wishlistTableView: UITableView!
     
+    var db: Firestore!
+    let uid = Auth.auth().currentUser!.uid
     
     override func viewDidLoad() {
         super.viewDidLoad()
         wishlistTableView.dataSource = self
         wishlistTableView.delegate = self
+//        db = Firestore.firestore()
+//        let docRef = db.collection("users").document(uid)
+//        docRef.updateData(["wishlistItems" : wishlistItems])
+        fetchWishlist()
+    }
+    
+    func updateWishlist() {
+        db = Firestore.firestore()
+        let docRef = db.collection("users").document(uid)
+        let encoded = FieldValue.arrayUnion(wishlistItems.compactMap( { _ in try? Firestore.Encoder().encode(0) } ) )
+        docRef.updateData(["wishlistItems" : encoded])
+    }
+    
+    func fetchWishlist() {
+        
+        db = Firestore.firestore()
+        let docRef = db.collection("users").document(uid)
+        
+        docRef.getDocument { (document, error) in
+            guard error == nil else {
+                print("error", error ?? "")
+                return
+            }
+            if let document = document, document.exists {
+                let data = document.data()
+                print("data", data as Any)
+                if let items = data!["wishlistItems"] as? [[String: Any]] {
+                            // Update the wishlistItems array
+                            self.wishlistItems = items.compactMap { itemDict in
+                                if let name = itemDict["name"] as? String,
+                                   let cost = itemDict["cost"] as? Double {
+                                    return (name: name, cost: cost)
+                                }
+                                return nil
+                            }
+                            // Reload the table view to reflect the changes
+                    self.wishlistTableView.reloadData()
+                }
+                
+            }
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
