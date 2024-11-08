@@ -49,7 +49,7 @@ class ChatViewController: MessagesViewController {
     var db: Firestore!
     let uid = Auth.auth().currentUser!.uid
     
-    let selfSender = Sender(photoURL: "", senderId: "1", displayName: "Doris") // TODO CHANGE THIS
+    var selfSender = Sender(photoURL: "", senderId: "", displayName: "")
     let conversationId = "dqUzhK0Njia6fVucPHns"
     var isNewConversation = false // TODO MAYBE CHANGE THIS DEPENDING ON NEEDS
     var messages = [Message]()
@@ -61,6 +61,11 @@ class ChatViewController: MessagesViewController {
         
         self.title = "Donkey's Birthday" // TODO CHANGE THIS
         
+        getDisplayName(userUID: "exampleUID") { displayName in
+            self.selfSender = Sender(photoURL: "", senderId: self.uid, displayName: displayName)
+        }
+        
+        
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
@@ -69,6 +74,26 @@ class ChatViewController: MessagesViewController {
 //        getAllMessagesForConversation()
         
         listenForMessages()
+    }
+    
+    func getDisplayName(userUID: String, completion: @escaping (String) -> Void) {
+        let docRef = db.collection("users").document(userUID)
+
+        docRef.getDocument { (document, error) in
+            guard error == nil else {
+                print("error", error ?? "")
+                completion("")  // Return an empty string if there's an error
+                return
+            }
+
+            if let document = document, document.exists {
+                let data = document.data()
+                let displayName = data?["name"] as? String ?? ""
+                completion(displayName)  // Pass the displayName to the completion handler
+            } else {
+                completion("")  // Return an empty string if the document does not exist
+            }
+        }
     }
     
     func createMessageId() -> String {
@@ -83,23 +108,37 @@ class ChatViewController: MessagesViewController {
     
     func listenForMessages() {
         db.collection("chats").document(conversationId)
-          .addSnapshotListener { documentSnapshot, error in
+            .addSnapshotListener { [weak self] documentSnapshot, error in
             guard let document = documentSnapshot else {
               print("Error fetching document: \(error!)")
               return
             }
-              do {
-                  let allMessages = try document.data(as: AllMessagesData.self)
-                  self.messages = allMessages.messages.map {message in
-                      let sender = Sender(photoURL: "", senderId: message.senderId, displayName: "hi")
-                      return Message(sender: sender, messageId: message.id, sentDate: message.date, kind: .text(message.content))
-                  }
-                  print(self.messages)
-                  self.messagesCollectionView.reloadData()
-              }
-              catch {
-                print(error)
-              }
+                do {
+                    let allMessages = try document.data(as: AllMessagesData.self)
+                    var messagesWithSenders: [Message] = []
+                    let dispatchGroup = DispatchGroup()
+
+                    for message in allMessages.messages {
+                        dispatchGroup.enter()
+                        
+                        self!.getDisplayName(userUID: message.senderId) { displayName in
+                            let sender = Sender(photoURL: "", senderId: message.senderId, displayName: displayName)
+                            let message = Message(sender: sender, messageId: message.id, sentDate: message.date, kind: .text(message.content))
+                            
+                            messagesWithSenders.append(message)
+                            dispatchGroup.leave()
+                        }
+                    }
+                    
+                    // This block is called when all display names have been fetched
+                    dispatchGroup.notify(queue: .main) {
+                        self!.messages = messagesWithSenders
+                        print(self!.messages)
+                        self!.messagesCollectionView.reloadData()
+                    }
+                } catch {
+                    print(error)
+                }
           }
     }
     
@@ -169,4 +208,20 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
     func numberOfSections(in messagesCollectionView: MessageKit.MessagesCollectionView) -> Int {
         return messages.count
     }
+    
+    func messageTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+        print("PRINTING NAME PRINTING NAME")
+        print(message.sender.displayName)
+        print(message)
+        return NSAttributedString(string: message.sender.displayName)
+    }
+    
+    func cellTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
+            return 10
+    }
+    
+    func messageTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
+            return 25
+    }
+
 }
