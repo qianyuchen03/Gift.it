@@ -65,13 +65,10 @@ class ChatViewController: MessagesViewController {
             self.selfSender = Sender(photoURL: "", senderId: self.uid, displayName: displayName)
         }
         
-        
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
         messageInputBar.delegate = self
-        
-//        getAllMessagesForConversation()
         
         listenForMessages()
     }
@@ -99,10 +96,10 @@ class ChatViewController: MessagesViewController {
     func createMessageId() -> String {
         // date, conversationId, senderEmail
         let dateString = Self.dateFormatter.string(from: Date())
-        let conversationId = "rawr"
-        let senderEmail = "doris@gmail.com"
+        let conversationId = conversationId
+        let senderId = uid
         
-        let identifier = "\(dateString)_\(conversationId)_\(senderEmail)"
+        let identifier = "\(dateString)_\(conversationId)_\(senderId)"
         return identifier
     }
     
@@ -132,7 +129,7 @@ class ChatViewController: MessagesViewController {
                     
                     // This block is called when all display names have been fetched
                     dispatchGroup.notify(queue: .main) {
-                        self!.messages = messagesWithSenders
+                        self!.messages = messagesWithSenders.sorted(by: { $0.sentDate < $1.sentDate })
                         print(self!.messages)
                         self!.messagesCollectionView.reloadData()
                     }
@@ -144,29 +141,14 @@ class ChatViewController: MessagesViewController {
     
     /* Database management */
     
-//    func getAllMessagesForConversation() {
-//        let docRef = db.collection("chats").document(conversationId)
-//
-//        docRef.getDocument { (document, error) in
-//            guard error == nil else {
-//                print("error", error ?? "")
-//                return
-//            }
-//
-//            if let document = document, document.exists {
-//                let data = document.data()
-//                if let data = data {
-//                    print("data", data)
-//                    let messagesData = data["messages"]
-//                    print(messagesData)
-//                }
-//            }
-//
-//        }
-//    }
-    
-    func sendMessage(to conversation: String, message: Message, completion: @escaping (Bool) -> Void) {
-         // TODO
+    func sendMessage(message: String, date: Date, messageId: String, senderId: String) {
+        let newMessage = ["content": message, "date": date, "id": messageId, "senderId": senderId] as [String: Any]
+        
+        let docRef = db.collection("chats").document(conversationId)
+        
+        docRef.updateData([
+            "messages": FieldValue.arrayUnion([newMessage])
+        ])
     }
 
 }
@@ -178,17 +160,18 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
             return
         }
         
+        let date = Date()
+        let messageId = createMessageId()
+        
         let message = Message(sender: selfSender,
-                               messageId: createMessageId(),
-                               sentDate: Date(),
+                               messageId: messageId,
+                               sentDate: date,
                                kind: .text(text))
         
         if isNewConversation {
             // create new conversation
         } else {
-            // append to existing conversation
-            // add new message to messages
-            // update db
+            sendMessage(message: text, date: date, messageId: messageId, senderId: uid)
             messages.append(message)
             messagesCollectionView.reloadData()
             inputBar.inputTextView.text = ""
