@@ -220,7 +220,7 @@
                                     <action selector="createAccountButtonTapped:" destination="esa-9F-ZGZ" eventType="touchUpInside" id="T2P-ZO-wGZ"/>
                                 </connections>
                             </button>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="person.crop.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="h6K-IP-AOm">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="person.crop.square.badge.camera" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="h6K-IP-AOm">
                                 <rect key="frame" x="95" y="154.66666666666663" width="200" height="198.66666666666663"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="200" id="0S3-aM-ogh"/>
@@ -293,6 +293,7 @@
                         <outlet property="errorMessage" destination="xfI-ap-mGR" id="y1l-4I-sC8"/>
                         <outlet property="nameField" destination="VWd-tl-k9W" id="nzD-NT-oRx"/>
                         <outlet property="passwordField" destination="RrN-Oq-xsQ" id="ppr-0A-Kgc"/>
+                        <outlet property="pfpImageView" destination="h6K-IP-AOm" id="Xgz-fZ-lqR"/>
                         <outlet property="usernameField" destination="oMy-Xn-Li5" id="pgq-tA-Nlr"/>
                         <segue destination="Jl5-LJ-fPM" kind="presentation" identifier="CreatedProfileSegue" id="n3i-JX-fU9"/>
                     </connections>
@@ -306,7 +307,7 @@
             <objects>
                 <viewController id="vgh-Qp-lrE" customClass="CalendarViewController" customModule="Gift_it" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="GcR-uy-uNM">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Calendar" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1hm-cQ-aPr">
@@ -337,7 +338,7 @@
             <objects>
                 <viewController id="8Ip-DK-sNW" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="UJl-Dg-TW5">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My Friends" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j1K-oy-ZoL">
@@ -396,7 +397,7 @@
             <objects>
                 <viewController storyboardIdentifier="GiftingGroup" id="A5Z-Cv-fes" customClass="GiftingGroupViewController" customModule="Gift_it" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="lpx-4a-IEq">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gifting Groups" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cqQ-yY-AQo">
@@ -446,7 +447,7 @@
             <objects>
                 <viewController id="6Gn-Xb-sNR" customClass="ChatViewController" customModule="Gift_it" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="a77-b7-Z9z">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="37c-3J-0KA"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -462,7 +463,7 @@
             <objects>
                 <viewController id="LAu-PH-hc2" customClass="WishlistViewController" customModule="Gift_it" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9Nd-N0-cmW">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wishlist" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jbd-Y1-bBP">
@@ -606,7 +607,7 @@
             <objects>
                 <viewController id="cen-Mp-uSD" customClass="ProfileViewController" customModule="Gift_it" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Plv-PE-AcL">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Profile" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jmM-II-yDI">
@@ -732,7 +733,7 @@
             <objects>
                 <viewController id="fPB-ZJ-CzU" customClass="SettingsViewController" customModule="Gift_it" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="iX5-Zn-XgH">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Settings" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zDT-KL-dxp">
@@ -903,7 +904,7 @@
             <objects>
                 <viewController id="KB5-PO-Tcw" customClass="EditProfileViewController" customModule="Gift_it" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="536-Yi-9VD">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="doris-pfp" translatesAutoresizingMaskIntoConstraints="NO" id="iLb-8q-N4Z">
@@ -1043,7 +1044,7 @@
                     <tabBarItem key="tabBarItem" title="Profile" image="person.crop.circle" catalog="system" id="Lfz-RU-sad"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="QZk-qw-W2u">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="44"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="56"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -1084,7 +1085,7 @@
                     </tabBarItem>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="1Lt-uA-tvv">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="44"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="56"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -1098,7 +1099,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="RNs-vH-3Q1"/>
+        <segue reference="n3i-JX-fU9"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.94901960780000005" green="0.59999999999999998" blue="0.69411764710000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
     <resources>
@@ -1110,6 +1111,7 @@
         <image name="message" catalog="system" width="128" height="116"/>
         <image name="person.2" catalog="system" width="128" height="87"/>
         <image name="person.crop.circle" catalog="system" width="128" height="123"/>
+        <image name="person.crop.square.badge.camera" catalog="system" width="128" height="109"/>
         <image name="square.and.pencil" catalog="system" width="128" height="121"/>
         <image name="staroflife.fill" catalog="system" width="121" height="128"/>
         <systemColor name="labelColor">
@@ -1119,7 +1121,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
