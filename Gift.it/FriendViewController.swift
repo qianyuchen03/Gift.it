@@ -5,6 +5,10 @@ class FriendViewController: UIViewController {
     var user: User?
     let db = Firestore.firestore() // Initialize Firestore database
 
+    @IBOutlet var nameLabel: UILabel!
+    @IBOutlet var bioLabel: UILabel!
+    @IBOutlet var birthdayLabel: UILabel!
+    @IBOutlet var usernameLabel: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -13,7 +17,6 @@ class FriendViewController: UIViewController {
         if let user = user {
             print("User ID: \(user.id)")
             fetchUserData(userId: user.id)
-            
             
         }
     }
@@ -32,14 +35,26 @@ class FriendViewController: UIViewController {
                 print("User Data: \(String(describing: data))")
 
                 // You can now use this data to populate your UI or store in a model
+                
                 // Example: If the user data has fields "username" and "email"
                 if let username = data?["username"] as? String {
                     print("Username: \(username)")
+                    self.usernameLabel.text = "@" + username
                 }
-                if let email = data?["email"] as? String {
-                    print("Email: \(email)")
+                if let name = data?["name"] as? String {
+                    print("Name: \(name)")
+                    self.nameLabel.text = name
                 }
-                // Add any other fields you're interested in here
+                if let birthday = data?["birthday"] as? String {
+                    self.birthdayLabel.text = birthday
+                }
+                
+                if let bio = data?["bio"] as? String {
+                        self.bioLabel.text = "Bio : " + bio
+                } else {
+                    self.bioLabel.text = "Bio : No bio yet"
+                }
+                
             } else {
                 print("Document does not exist")
             }
