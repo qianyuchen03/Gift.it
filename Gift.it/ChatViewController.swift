@@ -120,7 +120,8 @@ class ChatViewController: MessagesViewController {
                         
                         self!.getDisplayName(userUID: message.senderId) { displayName in
                             let sender = Sender(photoURL: "", senderId: message.senderId, displayName: displayName)
-                            let message = Message(sender: sender, messageId: message.id, sentDate: message.date, kind: .text(message.content))
+                            let myAttribute = [ NSAttributedString.Key.font: UIFont(name: "Courier New", size: 20.0)! ]
+                            let message = Message(sender: sender, messageId: message.id, sentDate: message.date, kind: .attributedText(NSAttributedString(string: message.content, attributes: myAttribute)))
                             
                             messagesWithSenders.append(message)
                             dispatchGroup.leave()
@@ -205,6 +206,14 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
     
     func messageTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
             return 25
+    }
+    
+    func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
+        return isFromCurrentSender(message: message) ? UIColor(hex: "#F2EFDC", alpha: 0.75) : UIColor(hex: "#D9D9D9", alpha: 1.0)
+    }
+    
+    func messageColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
+        return UIColor(hex: "#555555", alpha: 1.0)
     }
 
 }
