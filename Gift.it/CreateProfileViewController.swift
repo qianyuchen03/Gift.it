@@ -216,54 +216,59 @@ class CreateProfileViewController: UIViewController {
 
     func uploadProfileImageAndUpdateFirestore() {
         if let profileImage = pfpImageView.image {
-            // Step 1: Upload the profile image to Firebase Storage
-            uploadProfileImage(image: profileImage) { imageUrl in
-                if let imageUrl = imageUrl {
-                    // Step 2: Update Firestore with the profile image URL
-                    self.updateProfileImageInFirestore(imageUrl: imageUrl)
-                } else {
-                    self.errorMessage.text = "Failed to upload profile image."
+            // Convert UIImage to Data (JPEG format)
+            if let imageData = profileImage.jpegData(compressionQuality: 0.8) {
+                uploadProfileImage(imageData: imageData) { imageUrl in
+                    if let imageUrl = imageUrl {
+                        self.updateProfileImageInFirestore(imageUrl: imageUrl)
+                    } else {
+                        self.errorMessage.text = "Failed to upload profile image."
+                    }
                 }
+            } else {
+                self.errorMessage.text = "Failed to convert image to data."
             }
         } else {
             self.errorMessage.text = "Profile image is missing."
         }
     }
 
-    
-    func uploadProfileImage(image: UIImage, completion: @escaping (String?) -> Void) {
-        // Create a reference to Firebase Storage
-        let storageRef = Storage.storage().reference()
 
-        // Generate a unique image name (based on the user's UID or random UUID)
+
+    
+    func uploadProfileImage(imageData: Data, completion: @escaping (String?) -> Void) {
+        // Get Firebase Storage reference
+        let storageRef = Storage.storage().reference()
+        
+        // Generate a unique image name
         let imageName = UUID().uuidString
         let imageRef = storageRef.child("profile_pictures/\(imageName).jpg")
-
-        // Compress the image to JPEG data
-        if let imageData = image.jpegData(compressionQuality: 0.8) {
-            // Upload the image to Firebase Storage
-            imageRef.putData(imageData, metadata: nil) { metadata, error in
+        
+        // Upload image data to Firebase Storage
+        imageRef.putData(imageData, metadata: nil) { metadata, error in
+            if let error = error {
+                print("Error uploading image: \(error.localizedDescription)")
+                completion(nil)
+                return
+            }
+            
+            // Get the download URL of the uploaded image
+            imageRef.downloadURL { url, error in
                 if let error = error {
-                    print("Error uploading image: \(error.localizedDescription)")
+                    print("Error fetching download URL: \(error.localizedDescription)")
                     completion(nil)
                     return
                 }
-
-                // Once the upload is complete, get the image URL
-                imageRef.downloadURL { url, error in
-                    if let error = error {
-                        print("Error getting image URL: \(error.localizedDescription)")
-                        completion(nil)
-                    } else if let url = url {
-                        // Return the download URL
-                        completion(url.absoluteString)
-                    }
+                
+                // Successfully uploaded and fetched download URL
+                if let url = url {
+                    completion(url.absoluteString) // Return the URL as a string
                 }
             }
-        } else {
-            completion(nil)
         }
     }
+
+
 
     
     func updateProfileImageInFirestore(imageUrl: String) {
@@ -287,30 +292,6 @@ class CreateProfileViewController: UIViewController {
     }
 
     
-
-
-    // Function to check if the username is unique
-//    func checkUsernameUnique(completion: @escaping (Bool) -> Void) {
-//        let db = Firestore.firestore()
-//        
-//        // Query Firestore for any users with the same username
-//        db.collection("users").whereField("username", isEqualTo: usernameField.text ?? "")
-//            .getDocuments { querySnapshot, error in
-//                if let error = error {
-//                    print("Error checking username uniqueness: \(error)")
-//                    completion(false)
-//                } else {
-//                    if let documents = querySnapshot?.documents, !documents.isEmpty {
-//                        // Username already exists
-//                        completion(false)
-//                    } else {
-//                        // Username is unique
-//                        completion(true)
-//                    }
-//                }
-//            }
-//        
-//    }
 }
 
 // Image picker delegate methods
