@@ -59,6 +59,17 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
         
         fetchBirthdays()
     }
+    
+    func calendar(_ calendar: FSCalendar, appearance: FSCalendarAppearance, titleDefaultColorFor date: Date) -> UIColor?  {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "MM-dd"
+            let dateString = dateFormatter.string(from: date)
+
+            if birthdaysByDate[dateString] != nil {
+                return UIColor(hex: "#F299B1")
+            }
+        return appearance.titleDefaultColor
+    }
 
     func fetchBirthdays() {
         let db = Firestore.firestore()
@@ -96,6 +107,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
                     }
                 }
             }
+            self.calendar.reloadData()
         }
     }
 
@@ -119,18 +131,5 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
             present(alertController, animated: true)
         }
     
-    // TODO ADD RED DOT
-    
-//    func calendar(_ calendar: FSCalendar, appearance: FSCalendarAppearance, eventDefaultColorFor date: Date) -> UIColor? {
-//        let outputFormatter = DateFormatter()
-//        outputFormatter.dateFormat = "MM-dd"
-//        let dateString = outputFormatter.string(from: date)
-//        
-//        if let _ = birthdaysByDate[dateString] {
-//            return .red
-//        }
-//        
-//        return nil
-//    }
 
 }
