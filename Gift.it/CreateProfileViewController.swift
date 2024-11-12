@@ -111,7 +111,6 @@ class CreateProfileViewController: UIViewController {
     
     @IBAction func createAccountButtonTapped(_ sender: Any) {
         if validateFields() {
-
                        Auth.auth().createUser(withEmail: self.emailField.text!, password: self.passwordField.text!) { authResult, error in
                            if let error = error as NSError? {
                                // Handle error in Firebase Authentication
