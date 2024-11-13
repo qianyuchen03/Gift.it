@@ -47,6 +47,7 @@ class ChatViewController: MessagesViewController {
     }()
     
     var db: Firestore!
+    var listener: ListenerRegistration?
     let uid = Auth.auth().currentUser!.uid
     
     var selfSender = Sender(photoURL: "", senderId: "", displayName: "")
@@ -128,12 +129,16 @@ class ChatViewController: MessagesViewController {
     }
     
     func listenForMessages() {
-        db.collection("chats").document(conversationId)
+        // Remove any existing listener to avoid duplicates when switching chats
+        listener?.remove()
+        
+        listener = db.collection("chats").document(conversationId)
             .addSnapshotListener { [weak self] documentSnapshot, error in
-            guard let document = documentSnapshot else {
-              print("Error fetching document: \(error!)")
-              return
-            }
+                guard let self = self else { return } // Ensure self is still available
+                guard let document = documentSnapshot else {
+                    print("Error fetching document: \(error?.localizedDescription ?? "Unknown error")")
+                    return
+                }
                 do {
                     let allMessages = try document.data(as: AllMessagesData.self)
                     var messagesWithSenders: [Message] = []
@@ -142,9 +147,9 @@ class ChatViewController: MessagesViewController {
                     for message in allMessages.messages {
                         dispatchGroup.enter()
                         
-                        self!.getDisplayName(userUID: message.senderId) { displayName in
+                        self.getDisplayName(userUID: message.senderId) { displayName in
                             let sender = Sender(photoURL: "", senderId: message.senderId, displayName: displayName)
-                            let myAttribute = [ NSAttributedString.Key.font: UIFont(name: "Courier New", size: 18.0)! ]
+                            let myAttribute = [NSAttributedString.Key.font: UIFont(name: "Courier New", size: 18.0)!]
                             let message = Message(sender: sender, messageId: message.id, sentDate: message.date, kind: .attributedText(NSAttributedString(string: message.content, attributes: myAttribute)))
                             
                             messagesWithSenders.append(message)
@@ -152,17 +157,15 @@ class ChatViewController: MessagesViewController {
                         }
                     }
                     
-                    // This block is called when all display names have been fetched
                     dispatchGroup.notify(queue: .main) {
-                        self!.messages = messagesWithSenders.sorted(by: { $0.sentDate < $1.sentDate })
-                        print(self!.messages)
-                        self!.messagesCollectionView.reloadData()
-                        self!.messagesCollectionView.scrollToItem(at: IndexPath(row: 0, section: self!.messages.count - 1), at: .top, animated: false)
+                        self.messages = messagesWithSenders.sorted(by: { $0.sentDate < $1.sentDate })
+                        self.messagesCollectionView.reloadData()
+                        self.messagesCollectionView.scrollToItem(at: IndexPath(row: 0, section: self.messages.count - 1), at: .top, animated: false)
                     }
                 } catch {
-                    print(error)
+                    print("Error decoding messages: \(error.localizedDescription)")
                 }
-          }
+        }
     }
     
     /* Database management */
