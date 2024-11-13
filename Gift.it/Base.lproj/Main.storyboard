@@ -856,7 +856,12 @@
                         <viewLayoutGuide key="safeArea" id="37c-3J-0KA"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <navigationItem key="navigationItem" id="1ll-5P-Fvg"/>
+                    <navigationItem key="navigationItem" id="1ll-5P-Fvg">
+                        <rightBarButtonItems>
+                            <barButtonItem image="gearshape" catalog="system" id="446-xb-UqN"/>
+                            <barButtonItem image="cart" catalog="system" id="B07-Ka-ghL"/>
+                        </rightBarButtonItems>
+                    </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b77-U8-KXc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1530,6 +1535,7 @@
     <resources>
         <image name="bell" catalog="system" width="125" height="128"/>
         <image name="calendar" catalog="system" width="128" height="107"/>
+        <image name="cart" catalog="system" width="128" height="102"/>
         <image name="checkmark" catalog="system" width="128" height="114"/>
         <image name="circle.fill" catalog="system" width="128" height="123"/>
         <image name="doris-pfp" width="458" height="460"/>
@@ -1550,7 +1556,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

@@ -59,6 +59,10 @@ class ChatViewController: MessagesViewController {
         
         db = Firestore.firestore()
         
+        getChatName() { chatName in
+            self.title = chatName
+        }
+        
         self.title = "Donkey's Birthday" // TODO CHANGE THIS
         
         getDisplayName(userUID: "exampleUID") { displayName in
@@ -71,6 +75,26 @@ class ChatViewController: MessagesViewController {
         messageInputBar.delegate = self
         
         listenForMessages()
+    }
+    
+    func getChatName(completion: @escaping (String) -> Void) {
+        let docRef = db.collection("chats").document(conversationId)
+
+        docRef.getDocument { (document, error) in
+            guard error == nil else {
+                print("error", error ?? "")
+                completion("")  // Return an empty string if there's an error
+                return
+            }
+
+            if let document = document, document.exists {
+                let data = document.data()
+                let chatName = data?["title"] as? String ?? ""
+                completion(chatName)  // Pass the displayName to the completion handler
+            } else {
+                completion("")  // Return an empty string if the document does not exist
+            }
+        }
     }
     
     func getDisplayName(userUID: String, completion: @escaping (String) -> Void) {
@@ -120,7 +144,7 @@ class ChatViewController: MessagesViewController {
                         
                         self!.getDisplayName(userUID: message.senderId) { displayName in
                             let sender = Sender(photoURL: "", senderId: message.senderId, displayName: displayName)
-                            let myAttribute = [ NSAttributedString.Key.font: UIFont(name: "Courier New", size: 20.0)! ]
+                            let myAttribute = [ NSAttributedString.Key.font: UIFont(name: "Courier New", size: 18.0)! ]
                             let message = Message(sender: sender, messageId: message.id, sentDate: message.date, kind: .attributedText(NSAttributedString(string: message.content, attributes: myAttribute)))
                             
                             messagesWithSenders.append(message)
@@ -133,6 +157,7 @@ class ChatViewController: MessagesViewController {
                         self!.messages = messagesWithSenders.sorted(by: { $0.sentDate < $1.sentDate })
                         print(self!.messages)
                         self!.messagesCollectionView.reloadData()
+                        self!.messagesCollectionView.scrollToItem(at: IndexPath(row: 0, section: self!.messages.count - 1), at: .top, animated: false)
                     }
                 } catch {
                     print(error)
@@ -144,11 +169,13 @@ class ChatViewController: MessagesViewController {
     
     func sendMessage(message: String, date: Date, messageId: String, senderId: String) {
         let newMessage = ["content": message, "date": date, "id": messageId, "senderId": senderId] as [String: Any]
+        let newLatestMessage = ["date": date, "latest_message": message] as [String : Any]
         
         let docRef = db.collection("chats").document(conversationId)
         
         docRef.updateData([
-            "messages": FieldValue.arrayUnion([newMessage])
+            "messages": FieldValue.arrayUnion([newMessage]),
+            "latest_message": newLatestMessage
         ])
     }
 
@@ -174,7 +201,6 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         } else {
             sendMessage(message: text, date: date, messageId: messageId, senderId: uid)
             messages.append(message)
-            messagesCollectionView.reloadData()
             inputBar.inputTextView.text = ""
         }
     }
@@ -205,7 +231,7 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
     }
     
     func messageTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
-            return 25
+            return 23
     }
     
     func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
