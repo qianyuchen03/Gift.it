@@ -13,7 +13,8 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
     
     @IBOutlet weak var tableView: UITableView!
     
-    @IBOutlet weak var bellIcon: UIButton!
+
+    @IBOutlet weak var bellButton: UIBarButtonItem!
     
     let db = Firestore.firestore()
     var isDataLoaded = false
@@ -114,50 +115,84 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
             }
         }
     
-    //TODO DELETE GROUPS
     func isBirthdayWithinNextMonth(birthday: Date) -> Bool {
-        let today = Date()
-        let calendar = Calendar.current
-        guard let oneMonthFromToday = calendar.date(byAdding: .month, value: 1, to: today) else { return false }
-        return birthday >= today && birthday <= oneMonthFromToday
-    }
+          let today = Date()
+          let calendar = Calendar.current
+          // Get the current month and day
+          let todayComponents = calendar.dateComponents([.month, .day], from: today)
+          
+          // Get the target date, one month from today
+          guard let oneMonthFromToday = calendar.date(byAdding: .month, value: 1, to: today) else {
+              return false
+          }
+          let oneMonthFromTodayComponents = calendar.dateComponents([.month, .day], from: oneMonthFromToday)
+          // Extract only the month and day components of the birthday
+          let birthdayComponents = calendar.dateComponents([.month, .day], from: birthday)
+          // Check if the birthday is within the next month, regardless of year
+          if let birthdayMonth = birthdayComponents.month,
+             let birthdayDay = birthdayComponents.day,
+             let todayMonth = todayComponents.month,
+             let todayDay = todayComponents.day,
+             let nextMonth = oneMonthFromTodayComponents.month,
+             let nextDay = oneMonthFromTodayComponents.day {
+              // Birthday is within the next month if it falls between today and one month from today
+              return (birthdayMonth == todayMonth && birthdayDay >= todayDay) ||
+                     (birthdayMonth == nextMonth && birthdayDay <= nextDay)
+          }
+          return false
+      }
+
     
     func checkFriendsForUpcomingBirthdays() {
-        guard let currentUserId = Auth.auth().currentUser?.uid else { return }
-        let db = Firestore.firestore()
-        
-        db.collection("users").document(currentUserId).getDocument { snapshot, error in
-            guard let data = snapshot?.data(), error == nil else {
-                print("Error fetching user data: \(error?.localizedDescription ?? "Unknown error")")
-                return
-            }
-            
-            let friends = data["friendsList"] as? [String] ?? []
-            let invitationsSent = Set(data["invitationsSent"] as? [String] ?? [])
-            
-            for friendId in friends {
-                db.collection("users").document(friendId).getDocument { friendSnapshot, friendError in
-                    guard let friendData = friendSnapshot?.data(), friendError == nil else {
-                        print("Error fetching friend data: \(friendError?.localizedDescription ?? "Unknown error")")
-                        return
-                    }
-                    
-                    if let birthdayTimestamp = friendData["birthday"] as? Timestamp,
-                       !invitationsSent.contains(friendId), // Check if invitation hasn't been sent
-                       self.isBirthdayWithinNextMonth(birthday: birthdayTimestamp.dateValue()) {
-                        
-                        // Send invitation since it's within a month and hasn't been sent
-                        self.sendInvitation(toUserId: friendId, fromUserId: currentUserId)
-                        
-                        // Update Firestore to mark the invitation as sent
-                        self.updateInvitationsSent(currentUserId: currentUserId, friendId: friendId)
-                    }
-                }
-
-            }
-        }
-    }
+           guard let currentUserId = Auth.auth().currentUser?.uid else { return }
+           let db = Firestore.firestore()
+           
+           db.collection("users").document(currentUserId).getDocument { snapshot, error in
+               guard let data = snapshot?.data(), error == nil else {
+                   print("Error fetching user data: \(error?.localizedDescription ?? "Unknown error")")
+                   return
+               }
+               
+               let friends = data["friendsList"] as? [String] ?? []
+               let invitationsSent = Set(data["invitationsSent"] as? [String] ?? [])
+               
+               for friendId in friends {
+                   db.collection("users").document(friendId).getDocument { friendSnapshot, friendError in
+                       guard let friendData = friendSnapshot?.data(), friendError == nil else {
+                           print("Error fetching friend data: \(friendError?.localizedDescription ?? "Unknown error")")
+                           return
+                       }
+                       
+                       
+                       // Attempt to get the birthday as a string and parse it
+                       if let birthdayString = friendData["birthday"] as? String,
+                          let friendBirthday = self.parseDate(from: birthdayString),
+                          !invitationsSent.contains(friendId),
+                          self.isBirthdayWithinNextMonth(birthday: friendBirthday) {
+                           
+                           print("Birthday for friend \(friendId) is within next month: \(friendBirthday)")
+                           
+                           // Send invitation since it's within a month and hasn't been sent
+                           self.sendInvitation(toUserId: currentUserId, fromUserId: friendId)
+                           
+                           // Update Firestore to mark the invitation as sent
+                           self.updateInvitationsSent(currentUserId: currentUserId, friendId: friendId)
+                       } else {
+                           print("Friend \(friendId) has no valid or upcoming birthday.")
+                       }
+                   }
+               }
+           }
+       }
     
+    // Helper function to parse the birthday string into a Date
+    func parseDate(from birthdayString: String) -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMMM dd, yyyy" // Adjust the format to match your stored birthday strings
+        return dateFormatter.date(from: birthdayString)
+    }
+
+
     
     func sendInvitation(toUserId: String, fromUserId: String) {
         let db = Firestore.firestore()
@@ -174,6 +209,8 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
             }
         }
     }
+    
+
     
     func updateInvitationsSent(currentUserId: String, friendId: String) {
         let db = Firestore.firestore()
@@ -207,21 +244,31 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
                     
                     // If there are any pending invitations, highlight the bell icon
                     if let snapshot = querySnapshot, !snapshot.isEmpty {
-                        self.updateBellIcon(hasPendingInvitations: true)
+                        self.updateBellButton(hasPendingInvitations: true)
                     } else {
-                        self.updateBellIcon(hasPendingInvitations: false)
+                        self.updateBellButton(hasPendingInvitations: false)
                     }
                 }
         }
     
     
-    func updateBellIcon(hasPendingInvitations: Bool) {
-        if hasPendingInvitations {
-            bellIcon.setImage(UIImage(named: "bell.badge.fill"), for: .normal)
+    func updateBellButton(hasPendingInvitations: Bool) {
+        let imageName = hasPendingInvitations ? "bell.badge.fill" : "bell.fill"
+        
+        if let bellImage = UIImage(named: imageName) {
+            bellButton.image = bellImage
         } else {
-            bellIcon.setImage(UIImage(named: "bell.fill"), for: .normal)
+            print("Error: Image \(imageName) not found in asset catalog.")
         }
     }
+    
+    
+    @IBAction func bellButtonTapped(_ sender: Any) {
+        print("bell button tapped")
+        performSegue(withIdentifier: "toGiftingGroupNotificationVC", sender: self)
+    }
+    
+
 
 
 }

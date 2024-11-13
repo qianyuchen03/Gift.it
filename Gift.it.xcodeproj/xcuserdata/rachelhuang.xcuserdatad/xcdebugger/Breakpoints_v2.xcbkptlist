@@ -18,6 +18,92 @@
             endingLineNumber = "22"
             landmarkName = "GiftingGroupInvitationCell"
             landmarkType = "3">
+            <Locations>
+               <Location
+                  uuid = "8490C12F-C99C-4A1C-8064-157BAB903966 - c2f026ce3008a433"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Gift_it.GiftingGroupInvitationCell.delegate.getter : Swift.Optional&lt;Gift_it.GiftingGroupInvitationCellDelegate&gt;"
+                  moduleName = "Gift.it.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rachelhuang/Dev/CS371L/Gift.it/Gift.it/GiftingGroupInvitationCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "8490C12F-C99C-4A1C-8064-157BAB903966 - a9009228398d6b56"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Gift_it.GiftingGroupInvitationCell.delegate.setter : Swift.Optional&lt;Gift_it.GiftingGroupInvitationCellDelegate&gt;"
+                  moduleName = "Gift.it.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rachelhuang/Dev/CS371L/Gift.it/Gift.it/GiftingGroupInvitationCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "23"
+                  endingLineNumber = "23">
+               </Location>
+               <Location
+                  uuid = "8490C12F-C99C-4A1C-8064-157BAB903966 - 1ce6f2648ec24145"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Gift_it.GiftingGroupInvitationCell.delegate.modify : Swift.Optional&lt;Gift_it.GiftingGroupInvitationCellDelegate&gt;"
+                  moduleName = "Gift.it.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rachelhuang/Dev/CS371L/Gift.it/Gift.it/GiftingGroupInvitationCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "23"
+                  endingLineNumber = "23">
+               </Location>
+               <Location
+                  uuid = "8490C12F-C99C-4A1C-8064-157BAB903966 - 5bcf7a81ca12ba23"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Gift_it.GiftingGroupInvitationCell.delegate.modify : Swift.Optional&lt;Gift_it.GiftingGroupInvitationCellDelegate&gt; with unmangled suffix &quot;.resume.0&quot;"
+                  moduleName = "Gift.it.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///%3Ccompiler-generated%3E"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "8490C12F-C99C-4A1C-8064-157BAB903966 - 6c275c8aac34d6cb"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Gift_it.GiftingGroupInvitationCell.init(style: __C.UITableViewCellStyle, reuseIdentifier: Swift.Optional&lt;Swift.String&gt;) -&gt; Gift_it.GiftingGroupInvitationCell"
+                  moduleName = "Gift.it.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rachelhuang/Dev/CS371L/Gift.it/Gift.it/GiftingGroupInvitationCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "23"
+                  endingLineNumber = "23">
+               </Location>
+               <Location
+                  uuid = "8490C12F-C99C-4A1C-8064-157BAB903966 - 2aa412b7a52b7a20"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Gift_it.GiftingGroupInvitationCell.init(coder: __C.NSCoder) -&gt; Swift.Optional&lt;Gift_it.GiftingGroupInvitationCell&gt;"
+                  moduleName = "Gift.it.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rachelhuang/Dev/CS371L/Gift.it/Gift.it/GiftingGroupInvitationCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "23"
+                  endingLineNumber = "23">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -34,6 +120,92 @@
             endingLineNumber = "21"
             landmarkName = "GiftingGroupInvitationCell"
             landmarkType = "3">
+            <Locations>
+               <Location
+                  uuid = "7D551252-145F-49C6-B01B-EF815FEC8E54 - d42bd56cf670140e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Gift_it.GiftingGroupInvitationCell.acceptButton.getter : Swift.Optional&lt;__C.UIButton&gt;"
+                  moduleName = "Gift.it.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rachelhuang/Dev/CS371L/Gift.it/Gift.it/GiftingGroupInvitationCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "7D551252-145F-49C6-B01B-EF815FEC8E54 - df0bdeddb969c43a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Gift_it.GiftingGroupInvitationCell.acceptButton.setter : Swift.Optional&lt;__C.UIButton&gt;"
+                  moduleName = "Gift.it.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rachelhuang/Dev/CS371L/Gift.it/Gift.it/GiftingGroupInvitationCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "7D551252-145F-49C6-B01B-EF815FEC8E54 - f7135c6e23e8ceb4"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Gift_it.GiftingGroupInvitationCell.acceptButton.modify : Swift.Optional&lt;__C.UIButton&gt;"
+                  moduleName = "Gift.it.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rachelhuang/Dev/CS371L/Gift.it/Gift.it/GiftingGroupInvitationCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "21"
+                  endingLineNumber = "21">
+               </Location>
+               <Location
+                  uuid = "7D551252-145F-49C6-B01B-EF815FEC8E54 - fd7f34fd5798f7e5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Gift_it.GiftingGroupInvitationCell.acceptButton.modify : Swift.Optional&lt;__C.UIButton&gt; with unmangled suffix &quot;.resume.0&quot;"
+                  moduleName = "Gift.it.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///%3Ccompiler-generated%3E"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "7D551252-145F-49C6-B01B-EF815FEC8E54 - 6c275c8aac34d70d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Gift_it.GiftingGroupInvitationCell.init(style: __C.UITableViewCellStyle, reuseIdentifier: Swift.Optional&lt;Swift.String&gt;) -&gt; Gift_it.GiftingGroupInvitationCell"
+                  moduleName = "Gift.it.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rachelhuang/Dev/CS371L/Gift.it/Gift.it/GiftingGroupInvitationCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "21"
+                  endingLineNumber = "21">
+               </Location>
+               <Location
+                  uuid = "7D551252-145F-49C6-B01B-EF815FEC8E54 - 2aa412b7a52b7be6"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Gift_it.GiftingGroupInvitationCell.init(coder: __C.NSCoder) -&gt; Swift.Optional&lt;Gift_it.GiftingGroupInvitationCell&gt;"
+                  moduleName = "Gift.it.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rachelhuang/Dev/CS371L/Gift.it/Gift.it/GiftingGroupInvitationCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "21"
+                  endingLineNumber = "21">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
