@@ -17,6 +17,8 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
     
     let db = Firestore.firestore()
     
+    var chats: [Chat] = []
+    
     var giftingGroups: [(name: String, chatID: String)] = [
             ("Pog Group", "chat1"),
             ("Donkey Group", "chat2"),
@@ -28,8 +30,39 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
 
         tableView.delegate = self
         tableView.dataSource = self
+        fetchChats()
         checkFriendsForUpcomingBirthdays()
         checkForPendingInvitations()
+    }
+    
+    func fetchChats() {
+        let db = Firestore.firestore()
+        let chatsRef = db.collection("chats")
+        chatsRef.getDocuments (completion: { (snapshot, error) in
+                if let error = error {
+                    print("Error fetching chats: \(error)")
+                    return
+                }
+                
+                snapshot?.documents.forEach { document in
+                    let data = document.data()
+                    let conversationID = data["conversation_id"] as? String ?? "Unknown ID"
+                    let latestMessageMap = data["latest_message"] as? [String: Any]
+                    let latestMessage = latestMessageMap?["message"] as? String ?? "No message"
+                    let timeOfLatestMessage = (latestMessageMap?["date"] as? Timestamp)?.dateValue() ?? Date()
+                    let members = data["members"] as? [String] ?? []
+                                    
+                    let conversation = Chat(
+                                        convoID: conversationID,
+                                        latestMsg: latestMessage,
+                                        time: timeOfLatestMessage,
+                                        members: members
+                                    )
+                    print(conversationID, latestMessage, timeOfLatestMessage, members)
+                                    
+                    self.chats.append(conversation)
+                }
+            })
     }
     
     // Number of rows in section
@@ -39,15 +72,20 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
         
         // Configure the cell
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ChatCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "GiftingGroupChatCell", for: indexPath) as! GiftingGroupChatCell
             
             cell.textLabel?.font = UIFont(name: "Courier New Bold", size: 20)
             
+        if chats.isEmpty {
             let group = giftingGroups[indexPath.row]
-            cell.textLabel?.text = group.name // Set the cell's text label to the group name
-            
-            return cell
+            cell.textLabel?.text = group.name
+        } else {
+            let chat = chats[indexPath.row]
+            cell.configure(with: chat)
         }
+            
+        return cell
+    }
     
     // Handle cell selection (segue to the chat screen)
 //    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -178,4 +216,20 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
     }
 
 
+}
+
+class Chat {
+    
+    var convoID : String
+    var latestMsg : String
+    var time : Date
+    var members : [String]
+    
+    init(convoID: String, latestMsg: String, time: Date, members: [String]) {
+        self.convoID = convoID
+        self.latestMsg = latestMsg
+        self.time = time
+        self.members = members
+    }
+    
 }
