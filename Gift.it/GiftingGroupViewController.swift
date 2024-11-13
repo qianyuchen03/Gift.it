@@ -16,81 +16,77 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
     @IBOutlet weak var bellIcon: UIButton!
     
     let db = Firestore.firestore()
+    var isDataLoaded = false
+
     
     var chats: [Chat] = []
-    
-    var giftingGroups: [(name: String, chatID: String)] = [
-            ("Pog Group", "chat1"),
-            ("Donkey Group", "chat2"),
-            ("Shrek Group", "chat3")
-        ]
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.rowHeight = 80 // Adjust as needed
         fetchChats()
-        checkFriendsForUpcomingBirthdays()
-        checkForPendingInvitations()
+        self.checkFriendsForUpcomingBirthdays()
+        self.checkForPendingInvitations()
     }
     
     func fetchChats() {
-        let db = Firestore.firestore()
         let chatsRef = db.collection("chats")
-        chatsRef.getDocuments (completion: { (snapshot, error) in
-                if let error = error {
-                    print("Error fetching chats: \(error)")
-                    return
-                }
-                
-                snapshot?.documents.forEach { document in
-                    let data = document.data()
-                    let conversationID = data["conversation_id"] as? String ?? "Unknown ID"
-                    let latestMessageMap = data["latest_message"] as? [String: Any]
-                    let latestMessage = latestMessageMap?["message"] as? String ?? "No message"
-                    let timeOfLatestMessage = (latestMessageMap?["date"] as? Timestamp)?.dateValue() ?? Date()
-                    let members = data["members"] as? [String] ?? []
-                                    
-                    let conversation = Chat(
-                                        convoID: conversationID,
-                                        latestMsg: latestMessage,
-                                        time: timeOfLatestMessage,
-                                        members: members
-                                    )
-                    print(conversationID, latestMessage, timeOfLatestMessage, members)
-                                    
-                    self.chats.append(conversation)
-                }
-            })
+        chatsRef.getDocuments { (snapshot, error) in
+            if let error = error {
+                print("Error fetching chats: \(error.localizedDescription)")
+                return
+            }
+            
+            self.chats = snapshot?.documents.compactMap { document in
+                let data = document.data()
+                return Chat(
+                    convoID: data["conversation_id"] as? String ?? "Unknown ID",
+                    latestMsg: (data["latest_message"] as? [String: Any])?["latest_message"] as? String ?? "No message",
+                    time: ((data["latest_message"] as? [String: Any])?["date"] as? Timestamp)?.dateValue() ?? Date(),
+                    members: data["members"] as? [String] ?? []
+                )
+            } ?? []
+            
+            DispatchQueue.main.async {
+                self.isDataLoaded = true
+                self.tableView.reloadData()
+            }
+        }
     }
+
     
     // Number of rows in section
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return giftingGroups.count
+            return isDataLoaded ? chats.count : 0
         }
         
         // Configure the cell
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "GiftingGroupChatCell", for: indexPath) as! GiftingGroupChatCell
-            
+        // Check if data is loaded; if not, return a placeholder cell
+        guard isDataLoaded else {
+            let cell = UITableViewCell(style: .default, reuseIdentifier: "PlaceholderCell")
+            cell.textLabel?.text = "Loading..."
             cell.textLabel?.font = UIFont(name: "Courier New Bold", size: 20)
-            
-        if chats.isEmpty {
-            let group = giftingGroups[indexPath.row]
-            cell.textLabel?.text = group.name
-        } else {
-            let chat = chats[indexPath.row]
-            cell.configure(with: chat)
+            return cell
         }
-            
+        
+        // Proceed with setting up the actual cell if data is loaded
+        let cell = tableView.dequeueReusableCell(withIdentifier: "GiftingGroupChatCell", for: indexPath) as! GiftingGroupChatCell
+        cell.textLabel?.font = UIFont(name: "Courier New Bold", size: 20)
+        
+        let chat = chats[indexPath.row]
+        cell.configure(with: chat)
+        
         return cell
     }
     
     // Handle cell selection (segue to the chat screen)
 //    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 //            let selectedGroup = giftingGroups[indexPath.row]
-//            
+//
 //            // Perform a segue to the chat screen
 //            performSegue(withIdentifier: "ChatSegue", sender: selectedGroup)
 //        }

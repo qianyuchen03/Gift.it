@@ -14,14 +14,18 @@ class GiftingGroupChatCell: UITableViewCell {
     @IBOutlet weak var time: UILabel!
     
     func configure(with chat: Chat) {
-        groupchatName.text = String(chat.convoID)
-        latestMessage.text = String(chat.latestMsg)
-        let date = chat.time
+        groupchatName.text = chat.convoID
+        groupchatName.font = UIFont(name: "Courier New Bold", size: 20)
+                
+        latestMessage.text = chat.latestMsg
+        latestMessage.font = UIFont(name: "Courier New", size: 16)
+        latestMessage.lineBreakMode = .byTruncatingTail
+        latestMessage.numberOfLines = 1
+                
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "h:mm a"
-        let dateString = dateFormatter.string(from: date)
-        time.text = dateString
+        time.text = dateFormatter.string(from: chat.time)
+        time.font = UIFont(name: "Courier New", size: 14)
     }
-    
 
 }
