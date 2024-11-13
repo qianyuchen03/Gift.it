@@ -14,7 +14,7 @@ class GiftingGroupChatCell: UITableViewCell {
     @IBOutlet weak var time: UILabel!
     
     func configure(with chat: Chat) {
-        groupchatName.text = chat.convoID
+        groupchatName.text = chat.gcName
         groupchatName.font = UIFont(name: "Courier New Bold", size: 20)
                 
         latestMessage.text = chat.latestMsg

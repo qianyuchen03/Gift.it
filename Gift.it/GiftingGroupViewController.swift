@@ -17,6 +17,7 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
     
     let db = Firestore.firestore()
     var isDataLoaded = false
+    let uid = Auth.auth().currentUser!.uid
 
     
     var chats: [Chat] = []
@@ -42,12 +43,22 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
             
             self.chats = snapshot?.documents.compactMap { document in
                 let data = document.data()
-                return Chat(
-                    convoID: data["conversation_id"] as? String ?? "Unknown ID",
-                    latestMsg: (data["latest_message"] as? [String: Any])?["latest_message"] as? String ?? "No message",
-                    time: ((data["latest_message"] as? [String: Any])?["date"] as? Timestamp)?.dateValue() ?? Date(),
-                    members: data["members"] as? [String] ?? []
-                )
+                let members = data["members"] as? [String] ?? []
+                
+                // Check if current user is a member of the chat
+                if members.contains(self.uid) {
+                    return Chat(
+                        convoID: data["conversation_id"] as? String ?? "Unknown ID",
+                        latestMsg: (data["latest_message"] as? [String: Any])?["latest_message"] as? String ?? "No message",
+                        time: ((data["latest_message"] as? [String: Any])?["date"] as? Timestamp)?.dateValue() ?? Date(),
+                        members: members,
+                        gcName: data["gc_name"] as? String ?? "No groupchat name"
+                    )
+                }
+                
+                // If current user is not in the members array, return nil to exclude this chat
+                print("User is not in chat")
+                return nil
             } ?? []
             
             DispatchQueue.main.async {
@@ -56,6 +67,7 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
             }
         }
     }
+
 
     
     // Number of rows in section
@@ -220,12 +232,14 @@ class Chat {
     var latestMsg : String
     var time : Date
     var members : [String]
+    var gcName : String
     
-    init(convoID: String, latestMsg: String, time: Date, members: [String]) {
+    init(convoID: String, latestMsg: String, time: Date, members: [String], gcName : String) {
         self.convoID = convoID
         self.latestMsg = latestMsg
         self.time = time
         self.members = members
+        self.gcName = gcName
     }
     
 }
