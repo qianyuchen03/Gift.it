@@ -108,9 +108,10 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
             if segue.identifier == "ChatSegue" {
                 if let chatVC = segue.destination as? ChatViewController,
-                   let selectedGroup = sender as? (name: String, chatID: String) {
-                    // Pass the selected group data (chatID) to the ChatViewController
-//                    chatVC.chatID = selectedGroup.chatID
+                   let selectedChatIndex = tableView.indexPathForSelectedRow?.row {
+                    let selectedChat = chats[selectedChatIndex]
+                    chatVC.conversationId = selectedChat.convoID
+                    chatVC.chatName = selectedChat.gcName
                 }
             }
         }

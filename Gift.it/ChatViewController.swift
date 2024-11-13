@@ -51,7 +51,8 @@ class ChatViewController: MessagesViewController {
     let uid = Auth.auth().currentUser!.uid
     
     var selfSender = Sender(photoURL: "", senderId: "", displayName: "")
-    let conversationId = "dqUzhK0Njia6fVucPHns"
+    var conversationId = ""
+    var chatName = ""
     var isNewConversation = false // TODO MAYBE CHANGE THIS DEPENDING ON NEEDS
     var messages = [Message]()
 
@@ -60,11 +61,11 @@ class ChatViewController: MessagesViewController {
         
         db = Firestore.firestore()
         
-        getChatName() { chatName in
-            self.title = chatName
-        }
+//        getChatName() { chatName in
+//            self.title = chatName
+//        }
         
-        self.title = "Donkey's Birthday" // TODO CHANGE THIS
+        self.title = chatName // TODO CHANGE THIS
         
         getDisplayName(userUID: "exampleUID") { displayName in
             self.selfSender = Sender(photoURL: "", senderId: self.uid, displayName: displayName)
