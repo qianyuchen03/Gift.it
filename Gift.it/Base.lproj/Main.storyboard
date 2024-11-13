@@ -151,7 +151,7 @@
         <scene sceneID="dNt-J6-MiJ">
             <objects>
                 <viewController id="esa-9F-ZGZ" customClass="CreateProfileViewController" customModule="Gift_it" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" ambiguous="YES" id="SyR-tX-5ce">
+                    <view key="view" contentMode="scaleToFill" id="SyR-tX-5ce">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -447,9 +447,7 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="View Wishlist"/>
                                 <connections>
-                                    <segue destination="Fnj-um-C7i" kind="popoverPresentation" popoverAnchorView="hO5-pU-Izv" id="XyC-s6-8SV">
-                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                    </segue>
+                                    <action selector="viewWishlistButtonPressed:" destination="h8B-Kn-1s0" eventType="touchUpInside" id="q4w-0a-a6H"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tSu-hn-yt6">
@@ -524,21 +522,22 @@
                         <outlet property="birthdayLabel" destination="h0B-qW-0tg" id="Lgr-sB-fwB"/>
                         <outlet property="nameLabel" destination="tSu-hn-yt6" id="e7N-wH-QtJ"/>
                         <outlet property="usernameLabel" destination="zB6-WE-qvg" id="PKS-2U-rmg"/>
+                        <outlet property="viewWishlistButton" destination="hO5-pU-Izv" id="kbE-rp-LHQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uYO-SG-nCQ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1732.06106870229" y="2497.8873239436621"/>
+            <point key="canvasLocation" x="-1695" y="2508"/>
         </scene>
         <!--Friend Wishlist View Controller-->
         <scene sceneID="D3f-jX-WPf">
             <objects>
-                <viewController id="Fnj-um-C7i" customClass="FriendWishlistViewController" customModule="Gift_it" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FriendWishlistViewController" id="Fnj-um-C7i" customClass="FriendWishlistViewController" customModule="Gift_it" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Pqh-do-juC">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IY6-mn-98u">
+                            <view contentMode="scaleToFill" fixedFrame="YES" restorationIdentifier="FriendWishlistViewController" translatesAutoresizingMaskIntoConstraints="NO" id="IY6-mn-98u">
                                 <rect key="frame" x="49" y="232" width="294" height="289"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -560,6 +559,30 @@
                                             <action selector="xButtonPressed:" destination="Fnj-um-C7i" eventType="touchUpInside" id="5ix-am-h9i"/>
                                         </connections>
                                     </button>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="NYz-nD-Qf7">
+                                        <rect key="frame" x="18" y="62" width="259" height="209"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <prototypes>
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="WishListItemCell" id="FH8-ar-831">
+                                                <rect key="frame" x="0.0" y="50" width="259" height="43.666667938232422"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="FH8-ar-831" id="hcf-0G-lJ8">
+                                                    <rect key="frame" x="0.0" y="0.0" width="259" height="43.666667938232422"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <color key="backgroundColor" red="0.94901960784313721" green="0.65098039215686276" blue="0.71372549019607845" alpha="0.89810120033112584" colorSpace="custom" customColorSpace="displayP3"/>
+                                                </tableViewCellContentView>
+                                                <color key="backgroundColor" red="0.92549019610000005" green="1" blue="0.51764705879999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                            </tableViewCell>
+                                        </prototypes>
+                                    </tableView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QMH-m5-GfU">
+                                        <rect key="frame" x="18" y="151" width="259" height="31"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" red="0.94901960784313721" green="0.93725490196078431" blue="0.86274509803921573" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </view>
@@ -570,6 +593,8 @@
                     <navigationItem key="navigationItem" id="nib-CE-0mY"/>
                     <connections>
                         <outlet property="middleView" destination="IY6-mn-98u" id="2GW-Zi-tHe"/>
+                        <outlet property="nowishlistLabel" destination="QMH-m5-GfU" id="vMt-MG-2vD"/>
+                        <outlet property="wishTable" destination="NYz-nD-Qf7" id="y6P-ti-UHS"/>
                         <outlet property="xButton" destination="2ss-Om-RAr" id="B1r-VY-KGI"/>
                     </connections>
                 </viewController>
@@ -1556,7 +1581,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

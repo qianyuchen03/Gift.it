@@ -1,8 +1,15 @@
 import UIKit
 import FirebaseFirestore
 
-class FriendViewController: UIViewController {
+struct WishListItem {
+    var name: String
+    var cost: Double
+}
+
+class FriendViewController: UIViewController, UIPopoverPresentationControllerDelegate {
     var user: User?
+    var wishListItems: [[String: Any]] = []
+    @IBOutlet var viewWishlistButton: UIButton!
     let db = Firestore.firestore() // Initialize Firestore database
 
     @IBOutlet var nameLabel: UILabel!
@@ -17,7 +24,6 @@ class FriendViewController: UIViewController {
         if let user = user {
             print("User ID: \(user.id)")
             fetchUserData(userId: user.id)
-            
         }
     }
     
@@ -54,10 +60,49 @@ class FriendViewController: UIViewController {
                 } else {
                     self.bioLabel.text = "Bio : No bio yet"
                 }
+            
                 
-            } else {
+                // Load wishlist items
+                if let wishlistData = data?["wishlistItems"] as? [[String: Any]] {
+                    self.wishListItems = wishlistData
+                }
+                
+                
+
+                } else {
                 print("Document does not exist")
             }
         }
     }
+    
+    @IBAction func viewWishlistButtonPressed(_ sender: Any) {
+        print("STOPPPP")
+    if let friendWishlistVC = self.storyboard?.instantiateViewController(withIdentifier: "FriendWishlistViewController") as? FriendWishlistViewController {
+        // Pass the wishListItems to FriendWishlistViewController
+        friendWishlistVC.wishListItems = wishListItems
+        
+        
+        // Set the presentation style to popover
+             friendWishlistVC.modalPresentationStyle = .popover
+             if let popoverPresentationController = friendWishlistVC.popoverPresentationController {
+                 popoverPresentationController.sourceView = self.view // The view from which the popover should originate
+                 popoverPresentationController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0) // Center of the view
+                 popoverPresentationController.permittedArrowDirections = [] // No arrow, center the popover
+                 popoverPresentationController.delegate = self
+             }
+             
+             // Present the popover
+             present(friendWishlistVC, animated: true, completion: nil)
+
+
+    }
+    }
+    //    func navigateToFriendWishlistViewController() {
+//        // Make sure FriendWishlistViewController is part of the storyboard
+//        if let friendWishlistVC = storyboard?.instantiateViewController(withIdentifier: "FriendWishlistViewController") as? FriendWishlistViewController {
+//            // Pass the wishListItems to FriendWishlistViewController
+//            friendWishlistVC.wishListItems = self.wishListItems
+//
+//        }
+//    }
 }
