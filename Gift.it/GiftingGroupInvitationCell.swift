@@ -9,7 +9,7 @@
 import UIKit
 
 protocol GiftingGroupInvitationCellDelegate: AnyObject {
-    func didAcceptInvitation(friendId: String, friendBirthday: Date)
+    func didAcceptInvitation(friendId: String, friendBirthday: Date, friendName: String)
     func didDenyInvitation(friendId: String)
 }
 
@@ -23,15 +23,20 @@ class GiftingGroupInvitationCell: UITableViewCell {
     var delegate: GiftingGroupInvitationCellDelegate?
     var friendId: String?
     var friendBirthday: Date?
+    var friendName: String?
 
     @IBAction func acceptTapped(_ sender: Any) {
-        if let friendId = friendId, let friendBirthday = friendBirthday {
-            delegate?.didAcceptInvitation(friendId: friendId, friendBirthday: friendBirthday)
+        print("accept tapped")
+        if let friendId = friendId, let friendBirthday = friendBirthday, let friendName = friendName {
+            print("inside if")
+            delegate?.didAcceptInvitation(friendId: friendId, friendBirthday: friendBirthday, friendName: friendName)
         }
     }
     
     @IBAction func denyTapped(_ sender: Any) {
+        print("deny tapped")
         if let friendId = friendId {
+
             delegate?.didDenyInvitation(friendId: friendId)
         }
     }

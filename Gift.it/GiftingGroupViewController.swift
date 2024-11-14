@@ -168,13 +168,15 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
                        // Attempt to get the birthday as a string and parse it
                        if let birthdayString = friendData["birthday"] as? String,
                           let friendBirthday = self.parseDate(from: birthdayString),
+                          let friendName = friendData["name"] as? String,
+                          
                           !invitationsSent.contains(friendId),
                           self.isBirthdayWithinNextMonth(birthday: friendBirthday) {
                            
                            print("Birthday for friend \(friendId) is within next month: \(friendBirthday)")
                            
                            // Send invitation since it's within a month and hasn't been sent
-                           self.sendInvitation(toUserId: currentUserId, fromUserId: friendId)
+                           self.sendInvitation(toUserId: currentUserId, fromUserId: friendId, friendName: friendName, friendBirthday: birthdayString)
                            
                            // Update Firestore to mark the invitation as sent
                            self.updateInvitationsSent(currentUserId: currentUserId, friendId: friendId)
@@ -195,12 +197,15 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
 
 
     
-    func sendInvitation(toUserId: String, fromUserId: String) {
+    func sendInvitation(toUserId: String, fromUserId: String, friendName: String, friendBirthday: String) {
         let db = Firestore.firestore()
         let invitationData: [String: Any] = [
             "toUserId": toUserId,
             "fromUserId": fromUserId,
-            "createdAt": Timestamp()
+            "createdAt": Timestamp(),
+            "friendName": friendName,
+            "friendBirthday": friendBirthday,
+            "status": "pending"
         ]
         db.collection("invitations").addDocument(data: invitationData) { error in
             if let error = error {
@@ -210,6 +215,7 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
             }
         }
     }
+
     
 
     
