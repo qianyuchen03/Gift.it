@@ -53,7 +53,6 @@ class ChatViewController: MessagesViewController {
     var selfSender = Sender(photoURL: "", senderId: "", displayName: "")
     var conversationId = ""
     var chatName = ""
-    var isNewConversation = false // TODO MAYBE CHANGE THIS DEPENDING ON NEEDS
     var messages = [Message]()
 
     override func viewDidLoad() {
@@ -61,11 +60,7 @@ class ChatViewController: MessagesViewController {
         
         db = Firestore.firestore()
         
-//        getChatName() { chatName in
-//            self.title = chatName
-//        }
-        
-        self.title = chatName // TODO CHANGE THIS
+        self.title = chatName
         
         getDisplayName(userUID: "exampleUID") { displayName in
             self.selfSender = Sender(photoURL: "", senderId: self.uid, displayName: displayName)
@@ -182,6 +177,15 @@ class ChatViewController: MessagesViewController {
             "latest_message": newLatestMessage
         ])
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ChatSettingsSegueIdentifier" {
+            if let destination = segue.destination as? ChatSettingsViewController {
+                destination.originalChatName = chatName
+                destination.conversationId = conversationId
+            }
+        }
+    }
 
 }
 
@@ -200,13 +204,9 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
                                sentDate: date,
                                kind: .text(text))
         
-        if isNewConversation {
-            // create new conversation
-        } else {
-            sendMessage(message: text, date: date, messageId: messageId, senderId: uid)
-            messages.append(message)
-            inputBar.inputTextView.text = ""
-        }
+        sendMessage(message: text, date: date, messageId: messageId, senderId: uid)
+        messages.append(message)
+        inputBar.inputTextView.text = ""
     }
 }
 
