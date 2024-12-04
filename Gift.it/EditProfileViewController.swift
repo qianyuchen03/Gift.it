@@ -9,6 +9,7 @@ import UIKit
 
 class EditProfileViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate {
 
+    @IBOutlet weak var pfpImageView: UIImageView!
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var birthdayTextField: UITextField!
     @IBOutlet weak var editBioTextView: UITextView!
@@ -20,10 +21,13 @@ class EditProfileViewController: UIViewController, UITextViewDelegate, UITextFie
     var originalBio = ""
     var delegate: UIViewController!
     var username = ""
+    var profileImage: UIImage?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        if let profileImage = profileImage {
+            pfpImageView.image = profileImage
+        }
         nameTextField.text = originalName
         usernameLabel.text = username
         birthdayTextField.text = originalBirthday

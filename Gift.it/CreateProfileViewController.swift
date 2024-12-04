@@ -21,6 +21,8 @@ class CreateProfileViewController: UIViewController {
     
     @IBOutlet weak var pfpImageView: UIImageView!
     
+    let db = Firestore.firestore()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -111,24 +113,16 @@ class CreateProfileViewController: UIViewController {
     
     @IBAction func createAccountButtonTapped(_ sender: Any) {
         if validateFields() {
-                       Auth.auth().createUser(withEmail: self.emailField.text!, password: self.passwordField.text!) { authResult, error in
-                           if let error = error as NSError? {
-                               // Handle error in Firebase Authentication
-                               self.errorMessage.text = "Error: \(error.localizedDescription)"
-                           } else {
-                               // Step 3: Save the user data to Firestore if authentication is successful
-                               self.saveUserDataToFirestore { isSuccess in
-                                   if isSuccess {
-                                       // Step 4: Upload the profile picture and update Firestore with the image URL
-                                       self.uploadProfileImageAndUpdateFirestore()
-                                   } else {
-                                       self.errorMessage.text = "Failed to save user data."
-                                   }
-                               }
-                           }
-                       }
-                   }
-               }
+             Auth.auth().createUser(withEmail: emailField.text!, password: passwordField.text!) { authResult, error in
+                 if let error = error as NSError? {
+                     self.errorMessage.text = "Error: \(error.localizedDescription)"
+                 } else {
+                     self.saveUserDataToFirestore()
+                 }
+             }
+         }
+     }
+
     
     
     
@@ -185,113 +179,57 @@ class CreateProfileViewController: UIViewController {
     }
     
     // Save user data to Firestore after creating the account
-    func saveUserDataToFirestore(completion: @escaping (Bool) -> Void) {
-        if let user = Auth.auth().currentUser {
-            // Get Firestore database reference
-            let db = Firestore.firestore()
-
-            // Prepare the data to store in Firestore
-            let userData: [String: Any] = [
-                "name": nameField.text ?? "",
-                "email": emailField.text ?? "",
-                "username": usernameField.text ?? "",
-                "birthday": birthdayField.text ?? "",
-                "uid": user.uid
-            ]
-
-            // Store the user data in Firestore
-            db.collection("users").document(user.uid).setData(userData) { error in
-                if let error = error {
-                    // Display Firestore write error
-                    self.errorMessage.text = "Error saving user data: \(error.localizedDescription)"
-                    completion(false)
-                } else {
-                    // Data saved successfully
-                    completion(true)
-                }
-            }
-        }
-    }
-
-    func uploadProfileImageAndUpdateFirestore() {
-        if let profileImage = pfpImageView.image {
-            // Convert UIImage to Data (JPEG format)
-            if let imageData = profileImage.jpegData(compressionQuality: 0.8) {
-                uploadProfileImage(imageData: imageData) { imageUrl in
-                    if let imageUrl = imageUrl {
-                        self.updateProfileImageInFirestore(imageUrl: imageUrl)
-                    } else {
-                        self.errorMessage.text = "Failed to upload profile image."
-                    }
-                }
-            } else {
-                self.errorMessage.text = "Failed to convert image to data."
-            }
-        } else {
-            self.errorMessage.text = "Profile image is missing."
-        }
-    }
-
-
-
-    
-    func uploadProfileImage(imageData: Data, completion: @escaping (String?) -> Void) {
-        // Get Firebase Storage reference
-        let storageRef = Storage.storage().reference()
-        
-        // Generate a unique image name
-        let imageName = UUID().uuidString
-        let imageRef = storageRef.child("profile_pictures/\(imageName).jpg")
-        
-        // Upload image data to Firebase Storage
-        imageRef.putData(imageData, metadata: nil) { metadata, error in
-            if let error = error {
-                print("Error uploading image: \(error.localizedDescription)")
-                completion(nil)
-                return
-            }
-            
-            // Get the download URL of the uploaded image
-            imageRef.downloadURL { url, error in
-                if let error = error {
-                    print("Error fetching download URL: \(error.localizedDescription)")
-                    completion(nil)
-                    return
-                }
-                
-                // Successfully uploaded and fetched download URL
-                if let url = url {
-                    completion(url.absoluteString) // Return the URL as a string
-                }
-            }
-        }
-    }
-
-
+       func saveUserDataToFirestore() {
+           guard let user = Auth.auth().currentUser else { return }
+           
+           let userData: [String: Any] = [
+               "name": nameField.text ?? "",
+               "email": emailField.text ?? "",
+               "username": usernameField.text ?? "",
+               "birthday": birthdayField.text ?? "",
+               "uid": user.uid
+           ]
+           
+           db.collection("users").document(user.uid).setData(userData) { error in
+               if let error = error {
+                   self.errorMessage.text = "Error saving user data: \(error.localizedDescription)"
+               } else {
+                   self.saveProfileImageToFirestore(userId: user.uid)
+               }
+           }
+       }
+       func saveProfileImageToFirestore(userId: String) {
+           guard let image = pfpImageView.image,
+                 let base64DataURL = convertImageToDataURL(image) else {
+               errorMessage.text = "Failed to process profile image."
+               return
+           }
+           
+           db.collection("users").document(userId).updateData([
+               "profilePicture": base64DataURL
+           ]) { error in
+               if let error = error {
+                   self.errorMessage.text = "Error saving profile picture: \(error.localizedDescription)"
+               } else {
+                   self.performSegue(withIdentifier: "CreatedProfileSegue", sender: self)
+               }
+           }
+       }
+       
+       
+       
+       func convertImageToDataURL(_ image: UIImage) -> String? {
+           // Resize the image to a smaller resolution
+           let resizedImage = image.resized(toWidth: 200)
+           guard let imageData = resizedImage?.jpegData(compressionQuality: 0.5) else { return nil }
+           let base64String = imageData.base64EncodedString()
+           return "data:image/jpeg;base64,\(base64String)"
+       }
+       
+   }
 
     
-    func updateProfileImageInFirestore(imageUrl: String) {
-        if let user = Auth.auth().currentUser {
-            // Get Firestore database reference
-            let db = Firestore.firestore()
 
-            // Update the user's Firestore document with the profile image URL
-            db.collection("users").document(user.uid).updateData([
-                "profileImageUrl": imageUrl
-            ]) { error in
-                if let error = error {
-                    // Handle error in updating Firestore
-                    self.errorMessage.text = "Error saving image URL to Firestore: \(error.localizedDescription)"
-                } else {
-                    // Successfully updated Firestore, navigate to next screen
-                    self.performSegue(withIdentifier: "CreatedProfileSegue", sender: self)
-                }
-            }
-        }
-    }
-
-    
-}
 
 // Image picker delegate methods
 extension CreateProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -329,6 +267,17 @@ extension CreateProfileViewController: UIImagePickerControllerDelegate, UINaviga
 
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
+    }
+}
+
+// UIImage extension for resizing
+extension UIImage {
+    func resized(toWidth width: CGFloat) -> UIImage? {
+        let canvasSize = CGSize(width: width, height: CGFloat(ceil(width / size.width * size.height)))
+        UIGraphicsBeginImageContextWithOptions(canvasSize, false, scale)
+        defer { UIGraphicsEndImageContext() }
+        draw(in: CGRect(origin: .zero, size: canvasSize))
+        return UIGraphicsGetImageFromCurrentImageContext()
     }
 }
 

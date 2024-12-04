@@ -151,7 +151,7 @@
         <scene sceneID="dNt-J6-MiJ">
             <objects>
                 <viewController id="esa-9F-ZGZ" customClass="CreateProfileViewController" customModule="Gift_it" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" ambiguous="YES" id="SyR-tX-5ce">
+                    <view key="view" contentMode="scaleToFill" id="SyR-tX-5ce">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -1234,6 +1234,7 @@
                         <outlet property="bioTextView" destination="AMh-Of-KsW" id="hUl-ue-ymF"/>
                         <outlet property="birthdayLabel" destination="fsn-NY-bfF" id="N0R-de-TpZ"/>
                         <outlet property="nameLabel" destination="4QU-Aj-yKa" id="YJX-yB-8bC"/>
+                        <outlet property="pfpImageView" destination="wB8-E6-xUs" id="fQx-1V-rOA"/>
                         <outlet property="usernameLabel" destination="Kb4-PF-mQr" id="Blx-Nq-NHj"/>
                     </connections>
                 </viewController>
@@ -1543,6 +1544,7 @@
                         <outlet property="characterCounterLabel" destination="LMa-pz-2cU" id="usE-F5-r6E"/>
                         <outlet property="editBioTextView" destination="2za-pk-HzR" id="GeY-YH-vNW"/>
                         <outlet property="nameTextField" destination="3jA-kN-EcL" id="88m-NI-fJu"/>
+                        <outlet property="pfpImageView" destination="iLb-8q-N4Z" id="2Cs-Gg-WcH"/>
                         <outlet property="usernameLabel" destination="Phz-7W-y1R" id="jlk-r8-iGA"/>
                     </connections>
                 </viewController>
