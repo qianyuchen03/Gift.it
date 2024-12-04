@@ -184,6 +184,10 @@ class ChatViewController: MessagesViewController {
                 destination.originalChatName = chatName
                 destination.conversationId = conversationId
             }
+        } else if segue.identifier == "CartSegueIdentifier" {
+            if let destination = segue.destination as? CartViewController {
+                destination.conversationId = conversationId
+            }
         }
     }
 

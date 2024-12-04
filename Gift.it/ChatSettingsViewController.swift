@@ -10,10 +10,6 @@ import FirebaseCore
 import FirebaseFirestore
 import FirebaseAuth
 
-//struct MemberData: Codable {
-//    var id: String
-//}
-
 struct AllMembersData: Codable {
     var members: [String]
 }
