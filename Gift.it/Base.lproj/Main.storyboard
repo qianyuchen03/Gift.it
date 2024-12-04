@@ -1716,6 +1716,15 @@
                                 <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="Doris" textAlignment="center" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="EOP-EG-760">
+                                <rect key="frame" x="43.333333333333343" y="164" width="306.33333333333326" height="35.666666666666657"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="306.32999999999998" id="OSC-dK-JXD"/>
+                                </constraints>
+                                <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="30"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="m3I-xe-JWP"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -1729,14 +1738,17 @@
                             <constraint firstItem="u0G-Qq-gZx" firstAttribute="top" secondItem="N3p-mf-jIB" secondAttribute="bottom" constant="24" id="YDN-GI-Flq"/>
                             <constraint firstItem="wBd-ro-pRs" firstAttribute="top" secondItem="TLF-wT-5Rs" secondAttribute="bottom" constant="8" symbolic="YES" id="ZhP-wU-Eo3"/>
                             <constraint firstItem="N3p-mf-jIB" firstAttribute="top" secondItem="m3I-xe-JWP" secondAttribute="top" constant="44" id="iyl-TB-IGV"/>
+                            <constraint firstItem="Oqn-27-mmE" firstAttribute="top" secondItem="EOP-EG-760" secondAttribute="top" id="jA4-9e-GLF"/>
                             <constraint firstItem="u0G-Qq-gZx" firstAttribute="centerX" secondItem="skk-MK-1s4" secondAttribute="centerX" id="vxR-lk-KaQ"/>
                             <constraint firstItem="u0G-Qq-gZx" firstAttribute="leading" secondItem="HnM-4p-JvC" secondAttribute="trailing" constant="-177.33333333333334" id="x3E-fM-ceg"/>
+                            <constraint firstItem="EOP-EG-760" firstAttribute="centerX" secondItem="skk-MK-1s4" secondAttribute="centerX" id="yE9-mU-XbP"/>
                             <constraint firstItem="HnM-4p-JvC" firstAttribute="top" secondItem="Oqn-27-mmE" secondAttribute="bottom" constant="2" id="zgM-6T-HN8"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="hwL-ns-jxU"/>
                     <connections>
                         <outlet property="chatNameLabel" destination="Oqn-27-mmE" id="hzp-D9-Zfh"/>
+                        <outlet property="editChatNameTextField" destination="EOP-EG-760" id="XF0-J9-yjE"/>
                         <outlet property="membersTableView" destination="wBd-ro-pRs" id="HS7-5E-YJw"/>
                         <outlet property="numMembersLabel" destination="TLF-wT-5Rs" id="eEo-Go-DH4"/>
                     </connections>
@@ -1775,10 +1787,10 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGray6Color">
-            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

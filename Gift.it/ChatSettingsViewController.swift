@@ -18,11 +18,12 @@ struct AllMembersData: Codable {
     var members: [String]
 }
 
-class ChatSettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ChatSettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
 
     @IBOutlet weak var chatNameLabel: UILabel!
     @IBOutlet weak var numMembersLabel: UILabel!
     @IBOutlet weak var membersTableView: UITableView!
+    @IBOutlet weak var editChatNameTextField: UITextField!
     
     var db: Firestore!
     var originalChatName = ""
@@ -35,15 +36,20 @@ class ChatSettingsViewController: UIViewController, UITableViewDelegate, UITable
         db = Firestore.firestore()
         
         chatNameLabel.text = originalChatName
-        print(conversationId)
+        editChatNameTextField.text = originalChatName
+        editChatNameTextField.isHidden = true
         
         membersTableView.delegate = self
         membersTableView.dataSource = self
+        editChatNameTextField.delegate = self
         
         getMembers()
     }
     
     @IBAction func changeGroupNameButtonPressed(_ sender: Any) {
+        chatNameLabel.isHidden = true
+        editChatNameTextField.isHidden = false
+        editChatNameTextField.becomeFirstResponder()
     }
     
     func getMembers() {
@@ -103,6 +109,19 @@ class ChatSettingsViewController: UIViewController, UITableViewDelegate, UITable
         }
     }
     
+    func changeChatName() {
+        let newChatName = editChatNameTextField.text
+        chatNameLabel.text = newChatName
+        editChatNameTextField.isHidden = true
+        chatNameLabel.isHidden = false
+        
+        let docRef = db.collection("chats").document(conversationId)
+        
+        docRef.updateData([
+            "gc_name": newChatName
+        ])
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return members.count
     }
@@ -116,5 +135,20 @@ class ChatSettingsViewController: UIViewController, UITableViewDelegate, UITable
         cell.usernameLabel?.text = displayName
         
         return cell
+    }
+    
+    // Called when 'return' key pressed
+
+    func textFieldShouldReturn(_ textField:UITextField) -> Bool {
+        textField.resignFirstResponder()
+        changeChatName()
+        return true
+    }
+    
+    // Called when the user clicks on the view outside of the UITextField
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+        changeChatName()
     }
 }
