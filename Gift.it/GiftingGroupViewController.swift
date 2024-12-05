@@ -20,9 +20,24 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
     var isDataLoaded = false
     let uid = Auth.auth().currentUser!.uid
 
-    
+    var listener: ListenerRegistration?
     var chats: [Chat] = []
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        listener?.remove()
+        print("Listener removed in viewWillDisappear.")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+         super.viewWillAppear(animated)
+         
+         // These methods will now be called every time the screen appears
+         fetchChats()
+         checkFriendsForUpcomingBirthdays()
+         checkForPendingInvitations()
+     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -36,12 +51,18 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
     
     func fetchChats() {
         let chatsRef = db.collection("chats")
-        chatsRef.getDocuments { (snapshot, error) in
+        
+        // Remove any previous listener
+        listener?.remove()
+        
+        // Add a listener to the chats collection
+        listener = chatsRef.addSnapshotListener { (snapshot, error) in
             if let error = error {
-                print("Error fetching chats: \(error.localizedDescription)")
+                print("Error listening for chats updates: \(error.localizedDescription)")
                 return
             }
             
+            // Update the `chats` array with new data
             self.chats = snapshot?.documents.compactMap { document in
                 let data = document.data()
                 let members = data["members"] as? [String] ?? []
@@ -62,6 +83,7 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
                 return nil
             } ?? []
             
+            // Update the table view on the main thread
             DispatchQueue.main.async {
                 self.isDataLoaded = true
                 self.tableView.reloadData()
@@ -145,48 +167,82 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
 
     
     func checkFriendsForUpcomingBirthdays() {
-           guard let currentUserId = Auth.auth().currentUser?.uid else { return }
-           let db = Firestore.firestore()
-           
-           db.collection("users").document(currentUserId).getDocument { snapshot, error in
-               guard let data = snapshot?.data(), error == nil else {
-                   print("Error fetching user data: \(error?.localizedDescription ?? "Unknown error")")
-                   return
-               }
-               
-               let friends = data["friendsList"] as? [String] ?? []
-               let invitationsSent = Set(data["invitationsSent"] as? [String] ?? [])
-               
-               for friendId in friends {
-                   db.collection("users").document(friendId).getDocument { friendSnapshot, friendError in
-                       guard let friendData = friendSnapshot?.data(), friendError == nil else {
-                           print("Error fetching friend data: \(friendError?.localizedDescription ?? "Unknown error")")
-                           return
-                       }
+        guard let currentUserId = Auth.auth().currentUser?.uid else { return }
+        let db = Firestore.firestore()
+        
+        db.collection("users").document(currentUserId).getDocument { snapshot, error in
+            guard let data = snapshot?.data(), error == nil else {
+                print("Error fetching user data: \(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
+            
+            let friends = data["friendsList"] as? [String] ?? []
+            let invitationsSent = Set(data["invitationsSent"] as? [String] ?? [])
+            
+            for friendId in friends {
+                db.collection("users").document(friendId).getDocument { friendSnapshot, friendError in
+                    guard let friendData = friendSnapshot?.data(), friendError == nil else {
+                        print("Error fetching friend data: \(friendError?.localizedDescription ?? "Unknown error")")
+                        return
+                    }
+                    
+                    // Attempt to get the birthday as a string and parse it
+                    if let birthdayString = friendData["birthday"] as? String,
+                       let friendBirthday = self.parseDate(from: birthdayString),
+                       let friendName = friendData["name"] as? String,
                        
-                       
-                       // Attempt to get the birthday as a string and parse it
-                       if let birthdayString = friendData["birthday"] as? String,
-                          let friendBirthday = self.parseDate(from: birthdayString),
-                          let friendName = friendData["name"] as? String,
-                          
-                          !invitationsSent.contains(friendId),
-                          self.isBirthdayWithinNextMonth(birthday: friendBirthday) {
-                           
-                           print("Birthday for friend \(friendId) is within next month: \(friendBirthday)")
-                           
-                           // Send invitation since it's within a month and hasn't been sent
-                           self.sendInvitation(toUserId: currentUserId, fromUserId: friendId, friendName: friendName, friendBirthday: birthdayString)
-                           
-                           // Update Firestore to mark the invitation as sent
-                           self.updateInvitationsSent(currentUserId: currentUserId, friendId: friendId)
-                       } else {
-                           print("Friend \(friendId) has no valid or upcoming birthday.")
-                       }
-                   }
-               }
-           }
-       }
+                       !invitationsSent.contains(friendId),
+                       self.isBirthdayWithinNextMonth(birthday: friendBirthday) {
+                        
+                        print("Birthday for friend \(friendId) is within next month: \(friendBirthday)")
+                        
+                        // Check if an invitation already exists for this friend
+                        self.checkIfInvitationExists(toUserId: currentUserId, fromUserId: friendId) { exists in
+                            if !exists {
+                                // Send invitation since it's within a month, hasn't been sent yet, and no invitation exists
+                                self.sendInvitation(toUserId: currentUserId, fromUserId: friendId, friendName: friendName, friendBirthday: birthdayString)
+                                
+                                // Update Firestore to mark the invitation as sent
+                                self.updateInvitationsSent(currentUserId: currentUserId, friendId: friendId)
+                            } else {
+                                print("Invitation already exists for friend \(friendId). Skipping.")
+                            }
+                        }
+                    } else {
+                        print("Friend \(friendId) has no valid or upcoming birthday.")
+                    }
+                }
+            }
+        }
+    }
+
+    
+    func checkIfInvitationExists(toUserId: String, fromUserId: String, completion: @escaping (Bool) -> Void) {
+        let db = Firestore.firestore()
+
+        // Query Firestore for any existing invitations with the same recipient (toUserId), sender (fromUserId), and status is pending
+        db.collection("invitations")
+            .whereField("toUserId", isEqualTo: toUserId)
+            .whereField("fromUserId", isEqualTo: fromUserId)
+            .whereField("status", isEqualTo: "pending")
+            .getDocuments { querySnapshot, error in
+                if let error = error {
+                    print("Error checking existing invitations: \(error.localizedDescription)")
+                    completion(false) // Return false if there is an error
+                    return
+                }
+
+                // If there is a document in the result, that means the invitation exists
+                if let snapshot = querySnapshot, !snapshot.isEmpty {
+                    print("Invitation already exists for this friend.")
+                    completion(true)
+                } else {
+                    print("No existing invitation found.")
+                    completion(false)
+                }
+            }
+    }
+
     
     // Helper function to parse the birthday string into a Date
     func parseDate(from birthdayString: String) -> Date? {
