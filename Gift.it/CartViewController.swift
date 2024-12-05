@@ -20,10 +20,12 @@ class CartViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet weak var totalLabel: UILabel!
     @IBOutlet weak var splitLabel: UILabel!
     
-    var cartItems: [(name: String, cost: Double)] = []
-    
     var db: Firestore!
+    
+    var cartItems: [(name: String, cost: Double)] = []
     var conversationId = ""
+    var totalCost = 0.0
+    var numMembers = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,13 +34,23 @@ class CartViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         cartTableView.dataSource = self
         cartTableView.delegate = self
-        fetchCart()
+        
+        getNumMembers {
+            self.fetchCart()
+        }
     }
     
     func addCartItem(name: String, cost: Double) {
         cartItems.append((name, cost))
         updateCart()
         cartTableView.reloadData()
+        
+        totalCost += cost
+        totalLabel.text = "Total: $\(totalCost)"
+        
+        let split = numMembers > 0 ? totalCost / Double(numMembers) : 0.0
+        let roundedSplit = Double(round(100 * split) / 100)
+        splitLabel.text = String(format: "Split: $%.2f", roundedSplit)
     }
     
     func updateCart() {
@@ -78,8 +90,27 @@ class CartViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     
                     print("Cart items successfully loaded")
                     self.cartTableView.reloadData()
+                    
+                    self.totalCost = 0.0
+                    for item in self.cartItems {
+                        self.totalCost += item.cost
+                    }
+                    
+                    if self.totalCost == 0.0 {
+                        self.totalLabel.text = "Total: $0"
+                        self.splitLabel.text = "Split: $0"
+                    } else {
+                        self.totalLabel.text = "Total: $\(self.totalCost)"
+                        
+                        let split = self.numMembers > 0 ? self.totalCost / Double(self.numMembers) : 0.0
+                        let roundedSplit = Double(round(100 * split) / 100)
+                        self.splitLabel.text = String(format: "Split: $%.2f", roundedSplit)
+                    }
                 } else {
                     print("No cart items found.")
+                    self.totalCost = 0.00
+                    self.totalLabel.text = "Total: $0"
+                    self.splitLabel.text = "Split: $0"
                 }
             } else {
                 print("Document does not exist.")
@@ -100,6 +131,30 @@ class CartViewController: UIViewController, UITableViewDataSource, UITableViewDe
             } else {
                 print("Item successfully deleted from cart in Firestore!")
             }
+        }
+    }
+    
+    func getNumMembers(completion: @escaping () -> Void) {
+        let docRef = db.collection("chats").document(conversationId)
+        
+        docRef.getDocument { (document, error) in
+            if let error = error {
+                print("Error fetching cart data: \(error)")
+                completion() // Call completion even if there's an error
+                return
+            }
+            
+            if let document = document, document.exists {
+                if let membersArray = document.data()?["members"] as? [String] {
+                    self.numMembers = membersArray.count
+                    print("Got members")
+                } else {
+                    print("No members found.")
+                }
+            } else {
+                print("Document does not exist.")
+            }
+            completion()
         }
     }
     
@@ -129,6 +184,13 @@ class CartViewController: UIViewController, UITableViewDataSource, UITableViewDe
             cartItems.remove(at: indexPath.row)
             deleteItemFromFirestore(item: deletedItem)
             tableView.deleteRows(at: [indexPath], with: .fade)
+            
+            totalCost -= deletedItem.cost
+            totalLabel.text = "Total: $\(totalCost)"
+            
+            let split = numMembers > 0 ? totalCost / Double(numMembers) : 0.0
+            let roundedSplit = Double(round(100 * split) / 100)
+            splitLabel.text = String(format: "Split: $%.2f", roundedSplit)
         }
     }
 }
