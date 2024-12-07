@@ -30,11 +30,11 @@ class FindFriendsListViewController: UIViewController, UITableViewDelegate, UITa
         cell.usernameLabel?.text = user.username
         
         // Prevent row from becoming gray when selected
-           cell.selectionStyle = .none
+        cell.selectionStyle = .none
         
         // Set up button action for adding friends
         cell.addButtonAction = { [weak self] in
-            self?.addUserAsFriend(user, at: indexPath)
+            self?.addUserAsFriend(for: user, at: indexPath)
         }
         
         return cell
@@ -88,30 +88,63 @@ class FindFriendsListViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
     
-    func addUserAsFriend(_ user: User, at indexPath: IndexPath) {
-        // Add selected user to the logged-in user's friends list in Firestore
-        if let userId = currentUserId {
-            db.collection("users").document(userId).updateData([
-                "friendsList": FieldValue.arrayUnion([user.id])
+    //    func addUserAsFriend(_ user: User, at indexPath: IndexPath) {
+    //        // Add selected user to the logged-in user's friends list in Firestore
+    //        if let userId = currentUserId {
+    //            db.collection("users").document(userId).updateData([
+    //                "friendsList": FieldValue.arrayUnion([user.id])
+    //            ]) { [weak self] error in
+    //                if let error = error {
+    //                    print("Error updating friends list: \(error)")
+    //                } else {
+    //                    print("Successfully updated friends list.")
+    //                    // Update local friends list
+    //                    self?.friendsList.append(user.id)  // Update local friends list
+    //                    // Remove the user from the users array
+    //                    self?.users.remove(at: indexPath.row)  // Remove the user from the list
+    //
+    //                    // Re-fetch the users list to ensure the data is accurate
+    //                    self?.fetchUsers()
+    //
+    //                    // Ensure indexPath is valid before deleting the row
+    //                    if indexPath.row < self?.users.count ?? 0 {
+    //                        self?.tableView.deleteRows(at: [indexPath], with: .automatic)  // Update the table view
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    }
+    
+    func addUserAsFriend(for user: User, at indexPath: IndexPath) {
+        let db = Firestore.firestore()
+        
+        // Create the friend request notification
+        db.collection("users").document(currentUserId!).getDocument { document, error in
+            if let error = error {
+                print("Error fetching user document: \(error)")
+                return
+            }
+            
+            let data = document?.data()
+            let currentUserName = data?["username"]
+            let notificationData: [String: Any] = [
+                "type": "requestNotif",
+                "from": self.currentUserId ?? "none",
+                "message": "\(currentUserName ?? "Someone") has sent you a friend request."
+            ]
+            
+            // Add the notification to the target user's notifications collection
+            db.collection("users").document(user.id).updateData([
+                "notifications": FieldValue.arrayUnion([notificationData])
             ]) { [weak self] error in
                 if let error = error {
-                    print("Error updating friends list: \(error)")
-                } else {
-                    print("Successfully updated friends list.")
-                    // Update local friends list
-                    self?.friendsList.append(user.id)  // Update local friends list
-                    // Remove the user from the users array
-                    self?.users.remove(at: indexPath.row)  // Remove the user from the list
-                    
-                    // Re-fetch the users list to ensure the data is accurate
-                    self?.fetchUsers()
-                    
-                    // Ensure indexPath is valid before deleting the row
-                    if indexPath.row < self?.users.count ?? 0 {
-                        self?.tableView.deleteRows(at: [indexPath], with: .automatic)  // Update the table view
-                    }
+                    print("Error sending friend request notification: \(error)")
+                    return
                 }
             }
+            
+            
+            
         }
     }
 }

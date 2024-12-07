@@ -365,6 +365,9 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain" image="xmark" catalog="system"/>
+                                                    <connections>
+                                                        <action selector="denyTapped:" destination="tbN-hO-HtO" eventType="touchUpInside" id="ia2-tI-oHE"/>
+                                                    </connections>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lSr-pH-8gu">
                                                     <rect key="frame" x="20" y="11" width="255" height="21"/>
@@ -378,11 +381,16 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain" image="checkmark" catalog="system"/>
+                                                    <connections>
+                                                        <action selector="acceptTapped:" destination="tbN-hO-HtO" eventType="touchUpInside" id="hp9-Jg-LLx"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" systemColor="systemGray6Color"/>
                                         <connections>
+                                            <outlet property="acceptButton" destination="bqf-60-XE2" id="ABh-L1-fxy"/>
+                                            <outlet property="denyButton" destination="Msb-ky-6NY" id="Tfj-p8-sHW"/>
                                             <outlet property="notifLabel" destination="lSr-pH-8gu" id="hwe-vW-zRC"/>
                                         </connections>
                                     </tableViewCell>

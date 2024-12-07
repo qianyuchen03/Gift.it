@@ -26,7 +26,7 @@ extension UIColor {
     }
 }
 
-class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDataSource {
+class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDataSource, FSCalendarDelegateAppearance {
 
     var calendar: FSCalendar!
     var birthdaysByDate: [String: [String]] = [:] // Dictionary to store birthdays by date (formatted as "MM-dd")
@@ -51,7 +51,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
         calendar.appearance.headerTitleColor = UIColor(hex: "#F299B1")
         calendar.appearance.weekdayTextColor = UIColor(hex: "#F299B1")
         calendar.appearance.todayColor = UIColor(hex: "#F299B1")
-        calendar.appearance.selectionColor = UIColor(hex: "#F299B1", alpha: 0.5)
+        calendar.appearance.selectionColor = UIColor(hex: "#F299B1")
         
         calendar.appearance.titleFont = UIFont(name: "Courier New Bold", size: 16)
         calendar.appearance.headerTitleFont = UIFont(name: "Courier New Bold", size: 18)
@@ -60,16 +60,19 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
         fetchBirthdays()
     }
     
-    func calendar(_ calendar: FSCalendar, appearance: FSCalendarAppearance, titleDefaultColorFor date: Date) -> UIColor?  {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "MM-dd"
-            let dateString = dateFormatter.string(from: date)
+    func calendar(_ calendar: FSCalendar, appearance: FSCalendarAppearance, fillDefaultColorFor date: Date) -> UIColor? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM-dd"
+        let dateString = dateFormatter.string(from: date)
 
-            if birthdaysByDate[dateString] != nil {
-                return UIColor(hex: "#F299B1")
-            }
-        return appearance.titleDefaultColor
+        // Highlight dates with birthdays
+        if birthdaysByDate[dateString] != nil {
+            return UIColor(hex: "#8C6872", alpha: 0.5) // Highlight color
+        }
+
+        return nil // Default background
     }
+
 
     func fetchBirthdays() {
         let db = Firestore.firestore()
@@ -107,7 +110,10 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
                     }
                 }
             }
-            self.calendar.reloadData()
+            print("Fetched birthdays:", self.birthdaysByDate)
+                DispatchQueue.main.async {
+                    self.calendar.reloadData()
+                }
         }
     }
 
