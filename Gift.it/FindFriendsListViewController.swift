@@ -7,18 +7,31 @@ struct User {
     let username: String
 }
 
-class FindFriendsListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class FindFriendsListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     
     @IBOutlet var tableView: UITableView!
+    @IBOutlet var searchBar: UISearchBar!
     var users: [User] = []
-    var friendsList: [String] = []  // Store only the IDs of friends for easier filtering
+    var filteredUsers: [User] = [] // Array for filtered results
+    var isSearchActive: Bool = false // Track search state
+    var friendsList: [String] = [] // Store only the IDs of friends for easier filtering
     let db = Firestore.firestore()
+    
     var currentUserId: String? {
         return Auth.auth().currentUser?.uid
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tableView.delegate = self
+        tableView.dataSource = self
+        searchBar.delegate = self // Set delegate for UISearchBar
+        loadFriendsList()
+    }
+    
+    // MARK: - UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return users.count
+        return isSearchActive ? filteredUsers.count : users.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -26,13 +39,11 @@ class FindFriendsListViewController: UIViewController, UITableViewDelegate, UITa
             return UITableViewCell()
         }
         
-        let user = users[indexPath.row]
+        let user = isSearchActive ? filteredUsers[indexPath.row] : users[indexPath.row]
         cell.usernameLabel?.text = user.username
+        cell.selectionStyle = .none // Prevent selection highlight
         
-        // Prevent row from becoming gray when selected
-        cell.selectionStyle = .none
-        
-        // Set up button action for adding friends
+        // Add button action for adding friends
         cell.addButtonAction = { [weak self] in
             self?.addUserAsFriend(for: user, at: indexPath)
         }
@@ -40,13 +51,25 @@ class FindFriendsListViewController: UIViewController, UITableViewDelegate, UITa
         return cell
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        tableView.delegate = self
-        tableView.dataSource = self
-        loadFriendsList()
+    // MARK: - UISearchBarDelegate
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.isEmpty {
+            isSearchActive = false
+            filteredUsers.removeAll()
+        } else {
+            isSearchActive = true
+            filteredUsers = users.filter { $0.username.lowercased().contains(searchText.lowercased()) }
+        }
+        tableView.reloadData()
     }
     
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        isSearchActive = false
+        searchBar.text = ""
+        tableView.reloadData()
+    }
+    
+    // MARK: - Data Loading
     func loadFriendsList() {
         if let userId = currentUserId {
             db.collection("users").document(userId).getDocument { (document, error) in
@@ -88,38 +111,12 @@ class FindFriendsListViewController: UIViewController, UITableViewDelegate, UITa
         }
     }
     
-    //    func addUserAsFriend(_ user: User, at indexPath: IndexPath) {
-    //        // Add selected user to the logged-in user's friends list in Firestore
-    //        if let userId = currentUserId {
-    //            db.collection("users").document(userId).updateData([
-    //                "friendsList": FieldValue.arrayUnion([user.id])
-    //            ]) { [weak self] error in
-    //                if let error = error {
-    //                    print("Error updating friends list: \(error)")
-    //                } else {
-    //                    print("Successfully updated friends list.")
-    //                    // Update local friends list
-    //                    self?.friendsList.append(user.id)  // Update local friends list
-    //                    // Remove the user from the users array
-    //                    self?.users.remove(at: indexPath.row)  // Remove the user from the list
-    //
-    //                    // Re-fetch the users list to ensure the data is accurate
-    //                    self?.fetchUsers()
-    //
-    //                    // Ensure indexPath is valid before deleting the row
-    //                    if indexPath.row < self?.users.count ?? 0 {
-    //                        self?.tableView.deleteRows(at: [indexPath], with: .automatic)  // Update the table view
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    }
-    
+    // MARK: - Friend Request
     func addUserAsFriend(for user: User, at indexPath: IndexPath) {
-        let db = Firestore.firestore()
+        guard let currentUserId = currentUserId else { return }
         
         // Fetch the current user's document to get their username
-        db.collection("users").document(currentUserId!).getDocument { [weak self] document, error in
+        db.collection("users").document(currentUserId).getDocument { [weak self] document, error in
             guard let self = self else { return }
             
             if let error = error {
@@ -135,7 +132,7 @@ class FindFriendsListViewController: UIViewController, UITableViewDelegate, UITa
             // Create the notification data
             let notificationData: [String: Any] = [
                 "type": "requestNotif",
-                "from": self.currentUserId ?? "none",
+                "from": currentUserId,
                 "message": "\(currentUserName) has sent you a friend request."
             ]
             
@@ -151,5 +148,4 @@ class FindFriendsListViewController: UIViewController, UITableViewDelegate, UITa
             }
         }
     }
-
 }

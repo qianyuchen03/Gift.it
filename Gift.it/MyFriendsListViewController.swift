@@ -5,10 +5,12 @@ import UIKit
 import FirebaseFirestore
 import FirebaseAuth
 
-class MyFriendsListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class MyFriendsListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
+    @IBOutlet var searchBar: UISearchBar!
     @IBOutlet var tableView: UITableView!
     
     var friendsList: [User] = []   // Array to hold User objects for the logged-in user's friends
+    var filteredFriendsList: [User] = [] // Array to hold filtered User objects for search
     let db = Firestore.firestore()
     var currentUserId: String? {
         return Auth.auth().currentUser?.uid  // Gets the logged-in user's ID
@@ -16,7 +18,7 @@ class MyFriendsListViewController: UIViewController, UITableViewDelegate, UITabl
     var friendsListListener: ListenerRegistration?  // Listener for real-time updates
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return friendsList.count
+        return filteredFriendsList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -24,7 +26,7 @@ class MyFriendsListViewController: UIViewController, UITableViewDelegate, UITabl
             return UITableViewCell()
         }
         
-        let user = friendsList[indexPath.row]
+        let user = filteredFriendsList[indexPath.row]
         cell.usernameLabel?.text = user.username
         
 //        // Set up button action for adding friends
@@ -60,6 +62,7 @@ class MyFriendsListViewController: UIViewController, UITableViewDelegate, UITabl
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
+        searchBar.delegate = self  // Set search bar delegate
         observeFriendsListChanges()  // Set up real-time listener
     }
     
@@ -107,9 +110,50 @@ class MyFriendsListViewController: UIViewController, UITableViewDelegate, UITabl
         
         // Reload the table view once all friend data is fetched
         group.notify(queue: .main) {
+            self.filteredFriendsList = self.friendsList  // Initially, show all friends
             self.tableView.reloadData()
         }
     }
+    
+    // MARK: - Search Bar Methods
+
+        
+
+        func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+
+            if searchText.isEmpty {
+
+                filteredFriendsList = friendsList  // Show all friends if search text is empty
+
+            } else {
+
+                filteredFriendsList = friendsList.filter { $0.username.lowercased().contains(searchText.lowercased()) }
+
+            }
+
+            tableView.reloadData()
+
+        }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+
+            searchBar.text = ""
+
+            filteredFriendsList = friendsList  // Reset to show all friends
+
+            tableView.reloadData()
+
+            searchBar.resignFirstResponder()
+
+        }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+
+           searchBar.resignFirstResponder()  // Dismiss keyboard
+
+       }
+    
+    
     
     // MARK: - Swipe to delete
 //    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -161,13 +205,13 @@ class MyFriendsListViewController: UIViewController, UITableViewDelegate, UITabl
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "Remove Friend") { (action, view, completionHandler) in
             // Safely remove the friend only if index is valid
-            guard indexPath.row < self.friendsList.count else {
+            guard indexPath.row < self.filteredFriendsList.count else {
                 completionHandler(false)
                 return
             }
             
             // Get the friend to remove
-            let friendToRemove = self.friendsList[indexPath.row]
+            let friendToRemove = self.filteredFriendsList[indexPath.row]
             
             // Remove the friend relationship from Firestore
             self.removeFriendRelationship(friendId: friendToRemove.id) { success in
@@ -177,6 +221,9 @@ class MyFriendsListViewController: UIViewController, UITableViewDelegate, UITabl
                         self.friendsList.remove(at: index)
                         tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
                     }
+                    self.filteredFriendsList.remove(at: indexPath.row)
+
+                    tableView.deleteRows(at: [indexPath], with: .automatic)
                 }
                 completionHandler(success)
             }

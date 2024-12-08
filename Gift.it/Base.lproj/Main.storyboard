@@ -357,16 +357,21 @@
                                 <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="kIR-c9-d3v">
-                                <rect key="frame" x="0.0" y="144" width="393" height="634"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="kIR-c9-d3v">
+                                <rect key="frame" x="0.0" y="122" width="393" height="656"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="393" id="FDo-Jd-cHg"/>
                                     <constraint firstAttribute="height" constant="634" id="FuK-6K-er6"/>
                                 </constraints>
+                                <searchBar key="tableHeaderView" contentMode="redraw" id="wTL-1V-M3M">
+                                    <rect key="frame" x="0.0" y="0.0" width="393" height="44"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                </searchBar>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="FriendCell" id="XgI-5G-ddp" customClass="FriendCell" customModule="Gift_it" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="50" width="393" height="43.666667938232422"/>
+                                        <rect key="frame" x="0.0" y="94" width="393" height="43.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="XgI-5G-ddp" id="g97-a7-MMX">
                                             <rect key="frame" x="0.0" y="0.0" width="393" height="43.666667938232422"/>
@@ -416,13 +421,14 @@
                     </view>
                     <navigationItem key="navigationItem" id="75b-yl-rK7"/>
                     <connections>
+                        <outlet property="searchBar" destination="wTL-1V-M3M" id="5cd-wW-zPF"/>
                         <outlet property="tableView" destination="kIR-c9-d3v" id="TAb-Rd-56Q"/>
                         <segue destination="h8B-Kn-1s0" kind="show" identifier="showFriendProfile" id="tP6-nf-vyN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xYs-3q-IPl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1695" y="1798"/>
+            <point key="canvasLocation" x="-1695.4198473282443" y="1797.8873239436621"/>
         </scene>
         <!--Friend View Controller-->
         <scene sceneID="sUs-7u-JkK">
@@ -627,16 +633,21 @@
                                 <color key="textColor" red="0.45098039220000002" green="0.22352941179999999" blue="0.30588235289999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="qJD-tV-Ews">
-                                <rect key="frame" x="0.0" y="134" width="393" height="629"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="qJD-tV-Ews">
+                                <rect key="frame" x="0.0" y="121" width="393" height="642"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="629" id="LjW-3h-6Jl"/>
                                     <constraint firstAttribute="width" constant="393" id="aPj-a6-eev"/>
                                 </constraints>
+                                <searchBar key="tableHeaderView" contentMode="redraw" id="gA6-T4-zyp">
+                                    <rect key="frame" x="0.0" y="0.0" width="393" height="44"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                </searchBar>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="UserCell" rowHeight="52" id="4xQ-Qb-EDn" customClass="UserCell" customModule="Gift_it" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="50" width="393" height="52"/>
+                                        <rect key="frame" x="0.0" y="94" width="393" height="52"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4xQ-Qb-EDn" id="Ulp-Nh-3ll">
                                             <rect key="frame" x="0.0" y="0.0" width="393" height="52"/>
@@ -683,6 +694,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="KLD-IV-J7x"/>
                     <connections>
+                        <outlet property="searchBar" destination="gA6-T4-zyp" id="ASg-O0-hhr"/>
                         <outlet property="tableView" destination="qJD-tV-Ews" id="x2L-Mi-eYc"/>
                     </connections>
                 </viewController>
@@ -1970,7 +1982,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
