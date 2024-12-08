@@ -112,6 +112,52 @@ class MyFriendsListViewController: UIViewController, UITableViewDelegate, UITabl
     }
     
     // MARK: - Swipe to delete
+//    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+//        let deleteAction = UIContextualAction(style: .destructive, title: "Remove Friend") { (action, view, completionHandler) in
+//            // Safely remove the friend only if index is valid
+//            guard indexPath.row < self.friendsList.count else {
+//                completionHandler(false)
+//                return
+//            }
+//            
+//            // Remove the friend from Firestore and the local list
+//            let friendToRemove = self.friendsList[indexPath.row]
+//            self.removeFriendFromFirestore(friendId: friendToRemove.id) { success in
+//                if success {
+//                    // Update the local list and table view safely
+//                    if let index = self.friendsList.firstIndex(where: { $0.id == friendToRemove.id }) {
+//                        self.friendsList.remove(at: index)
+//                        tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+//                    }
+//                }
+//                completionHandler(success)
+//            }
+//        }
+//        
+//        return UISwipeActionsConfiguration(actions: [deleteAction])
+//    }
+//    
+//    func removeFriendFromFirestore(friendId: String, completion: @escaping (Bool) -> Void) {
+//        guard let userId = currentUserId else {
+//            completion(false)
+//            return
+//        }
+//        
+//        db.collection("users").document(userId).updateData([
+//            "friendsList": FieldValue.arrayRemove([friendId])
+//        ]) { error in
+//            if let error = error {
+//                print("Error removing friend from friends list: \(error)")
+//                completion(false)
+//            } else {
+//                print("Successfully removed friend from friends list.")
+//                completion(true)
+//            }
+//        }
+//    }
+    
+    
+    // MARK: - Swipe to delete
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "Remove Friend") { (action, view, completionHandler) in
             // Safely remove the friend only if index is valid
@@ -120,9 +166,11 @@ class MyFriendsListViewController: UIViewController, UITableViewDelegate, UITabl
                 return
             }
             
-            // Remove the friend from Firestore and the local list
+            // Get the friend to remove
             let friendToRemove = self.friendsList[indexPath.row]
-            self.removeFriendFromFirestore(friendId: friendToRemove.id) { success in
+            
+            // Remove the friend relationship from Firestore
+            self.removeFriendRelationship(friendId: friendToRemove.id) { success in
                 if success {
                     // Update the local list and table view safely
                     if let index = self.friendsList.firstIndex(where: { $0.id == friendToRemove.id }) {
@@ -136,23 +184,36 @@ class MyFriendsListViewController: UIViewController, UITableViewDelegate, UITabl
         
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
-    
-    func removeFriendFromFirestore(friendId: String, completion: @escaping (Bool) -> Void) {
-        guard let userId = currentUserId else {
+
+    func removeFriendRelationship(friendId: String, completion: @escaping (Bool) -> Void) {
+        guard let currentUserId = currentUserId else {
             completion(false)
             return
         }
         
-        db.collection("users").document(userId).updateData([
-            "friendsList": FieldValue.arrayRemove([friendId])
-        ]) { error in
+        let db = Firestore.firestore()
+        let currentUserRef = db.collection("users").document(currentUserId)
+        let friendUserRef = db.collection("users").document(friendId)
+        
+        // Use a batch to update both users atomically
+        let batch = db.batch()
+        
+        // Remove friendId from current user's friendsList
+        batch.updateData(["friendsList": FieldValue.arrayRemove([friendId])], forDocument: currentUserRef)
+        
+        // Remove currentUserId from friend's friendsList
+        batch.updateData(["friendsList": FieldValue.arrayRemove([currentUserId])], forDocument: friendUserRef)
+        
+        // Commit the batch
+        batch.commit { error in
             if let error = error {
-                print("Error removing friend from friends list: \(error)")
+                print("Error removing friend relationship: \(error)")
                 completion(false)
             } else {
-                print("Successfully removed friend from friends list.")
+                print("Successfully removed friend relationship.")
                 completion(true)
             }
         }
     }
+
 }

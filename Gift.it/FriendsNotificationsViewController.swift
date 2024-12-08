@@ -23,6 +23,7 @@ class FriendsNotificationsViewController: UIViewController, UITableViewDelegate,
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.rowHeight = 80
         fetchNotifications()
     }
     
@@ -47,49 +48,6 @@ class FriendsNotificationsViewController: UIViewController, UITableViewDelegate,
         }
     }
 
-
-    
-//    func fetchFriendsNames() {
-//        let usersRef = db.collection("users")
-//        
-//        // Fetch the friendsList array for the logged-in user
-//        usersRef.document(uid).getDocument { (document, error) in
-//            if let error = error {
-//                print("Error fetching user document: \(error.localizedDescription)")
-//                return
-//            }
-//            
-//            guard let data = document?.data(),
-//                  let friendsList = data["friendsList"] as? [String] else {
-//                print("No friends list found for this user.")
-//                return
-//            }
-//            
-//            // Group dispatch for asynchronous operations
-//            let dispatchGroup = DispatchGroup()
-//            
-//            // Fetch each friend's name
-//            for friendUID in friendsList {
-//                dispatchGroup.enter()
-//                usersRef.document(friendUID).getDocument { (friendDocument, error) in
-//                    if let error = error {
-//                        print("Error fetching friend document for UID \(friendUID): \(error.localizedDescription)")
-//                    } else if let friendData = friendDocument?.data(),
-//                              let friendName = friendData["name"] as? String {
-//                        self.notifs.append(friendName)
-//                    }
-//                    dispatchGroup.leave()
-//                }
-//            }
-//            
-//            // Completion after all friends are fetched
-//            dispatchGroup.notify(queue: .main) {
-//                print("Friends' names: \(self.notifs)")
-//                self.tableView.reloadData()
-//            }
-//        }
-//    }
-
     
     // Number of rows in section
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -102,50 +60,86 @@ class FriendsNotificationsViewController: UIViewController, UITableViewDelegate,
         let cell = tableView.dequeueReusableCell(withIdentifier: "FriendsNotificationsCell", for: indexPath) as! FriendsNotificationsCell
         
         let notif = notifications[indexPath.row]
-        cell.configure(with: notif)
+        cell.notif = notif
+        cell.notifLabel.text = notif.message
         cell.delegate = self // Set the delegate
         
         return cell
     }
     
     func acceptFriendRequest(notif: Notification) {
-                
-        // Update Firestore to add the friend
         let db = Firestore.firestore()
-                
-        db.collection("users").document(uid).updateData([
+        
+        let currentUserId = uid
+        
+        // Add the recipient (notif.from) to the current user's friendsList
+        db.collection("users").document(currentUserId).updateData([
             "friendsList": FieldValue.arrayUnion([notif.from])
         ]) { [weak self] error in
+            if let error = error {
+                print("Error adding friend to current user's friendsList: \(error)")
+                return
+            }
+            
+            // Add the current user to the recipient's friendsList
+            db.collection("users").document(notif.from).updateData([
+                "friendsList": FieldValue.arrayUnion([currentUserId])
+            ]) { error in
                 if let error = error {
-                    print("Error adding friend: \(error)")
+                    print("Error adding current user to recipient's friendsList: \(error)")
                     return
                 }
-                    
-                    // Send approval notification to the other user
-                if(notif.type == "requestNotif") {
+                
+                // Send approval notification to the recipient
+                if notif.type == "requestNotif" {
                     let approvalNotification = Notification(
                         type: "friendApproval",
-                        from: self?.uid ?? "",
-                        message: "\(self?.username ?? "Someone") has approved your friend request"
+                        from: currentUserId,
+                        message: "\(self?.username ?? "Someone") has approved your friend request."
                     )
-                
+                    
                     db.collection("users").document(notif.from).updateData([
                         "notifications": FieldValue.arrayUnion([approvalNotification.toDictionary()])
-                    ])
+                    ]) { error in
+                        if let error = error {
+                            print("Error sending approval notification: \(error)")
+                        }
+                    }
                 }
-                    
-                // Remove the notification from the local list and UI
-            if let index = self?.notifications.firstIndex(where: { $0.from == notif.from }) {
-                    self?.notifications.remove(at: index)
+                
+                // Remove the notification from Firestore and the local list
+                db.collection("users").document(currentUserId).updateData([
+                    "notifications": FieldValue.arrayRemove([notif.toDictionary()])
+                ]) { [weak self] error in
+                    if let error = error {
+                        print("Error removing notification: \(error)")
+                    } else {
+                        // Remove the notification from the local list and UI
+                        if let index = self?.notifications.firstIndex(where: { $0.from == notif.from }) {
+                            self?.notifications.remove(at: index)
+                        }
+                    }
                 }
+            }
         }
     }
+
     
     func deleteFriendRequest(notif: Notification){
         
-        if let index = self.notifications.firstIndex(where: { $0.from == notif.from }) {
-            self.notifications.remove(at: index)
+        // Remove the notification from Firestore and the local list
+        db.collection("users").document(self.uid).updateData([
+            "notifications": FieldValue.arrayRemove([notif.toDictionary()])
+        ]) { [weak self] error in
+            if let error = error {
+                print("Error removing notification: \(error)")
+            } else {
+                // Remove the notification from the local list and UI
+                if let index = self?.notifications.firstIndex(where: { $0.from == notif.from }) {
+                    self?.notifications.remove(at: index)
+                }
             }
+        }
     }
 
 

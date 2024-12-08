@@ -118,33 +118,38 @@ class FindFriendsListViewController: UIViewController, UITableViewDelegate, UITa
     func addUserAsFriend(for user: User, at indexPath: IndexPath) {
         let db = Firestore.firestore()
         
-        // Create the friend request notification
-        db.collection("users").document(currentUserId!).getDocument { document, error in
+        // Fetch the current user's document to get their username
+        db.collection("users").document(currentUserId!).getDocument { [weak self] document, error in
+            guard let self = self else { return }
+            
             if let error = error {
                 print("Error fetching user document: \(error)")
                 return
             }
             
-            let data = document?.data()
-            let currentUserName = data?["username"]
+            guard let data = document?.data(), let currentUserName = data["username"] as? String else {
+                print("Error fetching or parsing current user data.")
+                return
+            }
+            
+            // Create the notification data
             let notificationData: [String: Any] = [
                 "type": "requestNotif",
                 "from": self.currentUserId ?? "none",
-                "message": "\(currentUserName ?? "Someone") has sent you a friend request."
+                "message": "\(currentUserName) has sent you a friend request."
             ]
             
-            // Add the notification to the target user's notifications collection
+            // Add the notification to the recipient user's notifications array
             db.collection("users").document(user.id).updateData([
                 "notifications": FieldValue.arrayUnion([notificationData])
-            ]) { [weak self] error in
+            ]) { error in
                 if let error = error {
                     print("Error sending friend request notification: \(error)")
                     return
                 }
+                print("Friend request notification sent to \(user.id)")
             }
-            
-            
-            
         }
     }
+
 }
