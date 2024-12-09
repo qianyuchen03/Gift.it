@@ -29,13 +29,39 @@ class MyFriendsListViewController: UIViewController, UITableViewDelegate, UITabl
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "FriendCell", for: indexPath) as? FriendCell else {
             return UITableViewCell()
         }
-        
+
         let user = filteredFriendsList[indexPath.row]
         cell.usernameLabel?.text = user.username
-    
-        
+
+        // Fetch and display profile picture from Base64 string (Data URL)
+        if let imageDataURL = user.profilePicture {
+            setProfileImage(from: imageDataURL, for: cell)
+        } else {
+            // Use a default placeholder image if no profile picture is available
+            cell.profileImageView.image = UIImage(systemName: "person.circle")
+        }
+
         return cell
     }
+    
+    func setProfileImage(from dataURL: String, for cell: FriendCell) {
+        // Extract Base64-encoded part from data URL
+        guard let base64String = dataURL.split(separator: ",").last else {
+            print("Invalid data URL format.")
+            return
+        }
+        
+        // Decode Base64 string into Data
+        if let imageData = Data(base64Encoded: String(base64String)),
+           let decodedImage = UIImage(data: imageData) {
+            DispatchQueue.main.async {
+                cell.profileImageView.image = decodedImage
+            }
+        } else {
+            print("Failed to decode Base64 string into an image.")
+        }
+    }
+
     
     // MARK: - Handling Friend Cell Click
 
@@ -71,12 +97,14 @@ class MyFriendsListViewController: UIViewController, UITableViewDelegate, UITabl
     deinit {
         // Remove listener when the view controller is deinitialized to avoid memory leaks
         friendsListListener?.remove()
+        friendsListListener = nil
     }
 
     func observeFriendsListChanges() {
         guard let userId = currentUserId else { return }
         
         friendsListListener = db.collection("users").document(userId).addSnapshotListener { documentSnapshot, error in
+            
             if let error = error {
                 print("Error observing friends list: \(error)")
                 return
@@ -90,29 +118,32 @@ class MyFriendsListViewController: UIViewController, UITableViewDelegate, UITabl
     }
     
     func fetchFriendsDetails(friendIds: [String]) {
-        let group = DispatchGroup()  // For handling async fetches
-        
-        friendsList.removeAll()  // Clear previous data to avoid duplicates
-        
+        let group = DispatchGroup() // Handle async fetches
+
+        friendsList.removeAll() // Clear previous data to avoid duplicates
+
         for friendId in friendIds {
             group.enter()
             db.collection("users").document(friendId).getDocument { (document, error) in
-                defer { group.leave() }  // Ensure we leave the group even if there's an error
+                defer { group.leave() } // Ensure we leave the group even if there's an error
                 if let error = error {
                     print("Error fetching friend data for ID \(friendId): \(error)")
                     return
                 }
-                
-                if let document = document, document.exists, let username = document.data()?["username"] as? String {
-                    let friend = User(id: friendId, username: username)
+
+                if let document = document, document.exists {
+                    let data = document.data()
+                    let username = data?["username"] as? String ?? "Unknown"
+                    let profilePicture = data?["profilePicture"] as? String
+
+                    let friend = User(id: friendId, username: username, profilePicture: profilePicture)
                     self.friendsList.append(friend)
                 }
             }
         }
-        
-        // Reload the table view once all friend data is fetched
+
         group.notify(queue: .main) {
-            self.filteredFriendsList = self.friendsList  // Initially, show all friends
+            self.filteredFriendsList = self.friendsList // Initially, show all friends
             self.tableView.reloadData()
         }
     }

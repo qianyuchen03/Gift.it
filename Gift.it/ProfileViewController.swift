@@ -75,29 +75,40 @@ class ProfileViewController: UIViewController, ProfileChanger {
                         if let imageDataURL = data["profilePicture"] as? String {
                             self.setProfileImage(from: imageDataURL)
                         } else {
+                            DispatchQueue.main.async {
+                                self.pfpImageView.image = UIImage(systemName: "person.circle")
+                            }
                             print("No profile image data URL found.")
                         }
                     }
                 }
             }
         }
-        func setProfileImage(from dataURL: String) {
-            // Extract Base64-encoded part from data URL
-            guard let base64String = dataURL.split(separator: ",").last else {
-                print("Invalid data URL format.")
-                return
+    func setProfileImage(from dataURL: String) {
+        // Extract Base64-encoded part from data URL
+        guard let base64String = dataURL.split(separator: ",").last else {
+            print("Invalid data URL format.")
+            // Set default image if the data URL format is invalid
+            DispatchQueue.main.async {
+                self.pfpImageView.image = UIImage(systemName: "person.circle")
             }
-            
-            // Decode Base64 string into Data
-            if let imageData = Data(base64Encoded: String(base64String)),
-               let decodedImage = UIImage(data: imageData) {
-                DispatchQueue.main.async {
-                    self.pfpImageView.image = decodedImage
-                }
-            } else {
-                print("Failed to decode Base64 string into an image.")
+            return
+        }
+        
+        // Decode Base64 string into Data
+        if let imageData = Data(base64Encoded: String(base64String)),
+           let decodedImage = UIImage(data: imageData) {
+            DispatchQueue.main.async {
+                self.pfpImageView.image = decodedImage
+            }
+        } else {
+            print("Failed to decode Base64 string into an image.")
+            // Set default image if decoding fails
+            DispatchQueue.main.async {
+                self.pfpImageView.image = UIImage(systemName: "person.circle")
             }
         }
+    }
 
     
     func changeProfile(newName:String, newBirthday:String, newBio:String) {

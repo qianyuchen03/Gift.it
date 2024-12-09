@@ -5,6 +5,7 @@ import FirebaseAuth
 struct User {
     let id: String
     let username: String
+    var profilePicture: String?
 }
 
 class FindFriendsListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
@@ -46,6 +47,13 @@ class FindFriendsListViewController: UIViewController, UITableViewDelegate, UITa
         cell.usernameLabel?.text = user.username
         cell.selectionStyle = .none // Prevent selection highlight
         
+        // Load profile picture from Data URL
+         if let profilePicture = user.profilePicture {
+             setProfileImage(from: profilePicture, for: cell)
+         } else {
+             cell.profileImageView.image = UIImage(systemName: "person.circle") // Default image
+         }
+        
         // Check if the user already has a pending request
         let isPending = pendingRequests[user.id] ?? false
         let buttonText = isPending ? "Pending" : "Add"
@@ -64,6 +72,28 @@ class FindFriendsListViewController: UIViewController, UITableViewDelegate, UITa
         }
         return cell
     }
+    
+    // MARK: - Helper Function for Data URL Profile Picture
+       func setProfileImage(from dataURL: String, for cell: UserCell) {
+           // Extract Base64-encoded part from data URL
+           guard let base64String = dataURL.split(separator: ",").last else {
+               print("Invalid data URL format.")
+               return
+           }
+           
+           // Decode Base64 string into Data
+           if let imageData = Data(base64Encoded: String(base64String)),
+              let decodedImage = UIImage(data: imageData) {
+               DispatchQueue.main.async {
+                   cell.profileImageView.image = decodedImage
+               }
+           } else {
+               print("Failed to decode Base64 string into an image.")
+               DispatchQueue.main.async {
+                   cell.profileImageView.image = UIImage(systemName: "person.circle") // Default image if decoding fails
+               }
+           }
+       }
     
     // MARK: - UISearchBarDelegate
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -114,7 +144,8 @@ class FindFriendsListViewController: UIViewController, UITableViewDelegate, UITa
                 let data = document.data()
                 let userId = document.documentID
                 if let username = data["username"] as? String, !self.friendsList.contains(userId) {
-                    return User(id: userId, username: username)
+                    let profilePicture = data["profilePicture"] as? String
+                    return User(id: userId, username: username, profilePicture: profilePicture)
                 }
                 return nil
             }

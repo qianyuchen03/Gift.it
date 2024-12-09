@@ -12,6 +12,8 @@ class UserCell: UITableViewCell {
     @IBOutlet var usernameLabel: UILabel!
     @IBOutlet var addButton: UIButton!
     
+    @IBOutlet weak var profileImageView: UIImageView!
+    
     var addButtonAction: (() -> Void)?
 
 //    @IBAction func addButtonTapped(_ sender: UIButton) {

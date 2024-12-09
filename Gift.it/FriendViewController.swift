@@ -17,6 +17,8 @@ class FriendViewController: UIViewController, UIPopoverPresentationControllerDel
     @IBOutlet var bioLabel: UILabel!
     @IBOutlet var birthdayLabel: UILabel!
     @IBOutlet var usernameLabel: UILabel!
+    @IBOutlet weak var profileImageView: UIImageView!
+    
     var wishlistVisibility: Bool?
     let uid = Auth.auth().currentUser!.uid
     
@@ -30,6 +32,13 @@ class FriendViewController: UIViewController, UIPopoverPresentationControllerDel
             fetchUserData(userId: user.id)
             fetchWishlistVisibility(userId: user.id)
         }
+        setupProfileImageView()
+    }
+    
+    func setupProfileImageView() {
+        profileImageView.layer.cornerRadius = profileImageView.frame.height / 2
+        profileImageView.clipsToBounds = true
+        profileImageView.contentMode = .scaleAspectFill
     }
     
     func fetchWishlistVisibility(userId: String) {
@@ -86,6 +95,15 @@ class FriendViewController: UIViewController, UIPopoverPresentationControllerDel
                         self.bioLabel.text = "Bio : " + bio
                 } else {
                     self.bioLabel.text = "Bio : No bio yet"
+                }
+                
+                // Load profile picture
+                if let profilePictureBase64 = data?["profilePicture"] as? String,
+                   let imageData = Data(base64Encoded: profilePictureBase64),
+                   let image = UIImage(data: imageData) {
+                    self.profileImageView.image = image
+                } else {
+                    self.profileImageView.image = UIImage(systemName: "person.circle") // Default placeholder
                 }
             
                 

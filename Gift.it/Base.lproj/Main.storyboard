@@ -391,6 +391,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="profileImageView" destination="RrT-ZU-6g1" id="FbS-pQ-iZV"/>
                                             <outlet property="usernameLabel" destination="1bV-Sz-WWJ" id="qyO-Wg-P5a"/>
                                         </connections>
                                     </tableViewCell>
@@ -540,6 +541,7 @@
                         <outlet property="bioLabel" destination="AOy-4f-HL8" id="ptS-pP-Ucl"/>
                         <outlet property="birthdayLabel" destination="h0B-qW-0tg" id="Lgr-sB-fwB"/>
                         <outlet property="nameLabel" destination="tSu-hn-yt6" id="e7N-wH-QtJ"/>
+                        <outlet property="profileImageView" destination="EHb-Rh-4Ug" id="POt-ty-qVG"/>
                         <outlet property="usernameLabel" destination="zB6-WE-qvg" id="PKS-2U-rmg"/>
                         <outlet property="viewWishlistButton" destination="hO5-pU-Izv" id="kbE-rp-LHQ"/>
                     </connections>
@@ -679,6 +681,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="addButton" destination="The-4r-Gfu" id="c4r-1b-ELG"/>
+                                            <outlet property="profileImageView" destination="ufk-Ig-OBZ" id="wxO-Ze-JVd"/>
                                             <outlet property="usernameLabel" destination="7aU-yh-WgT" id="1ui-Gd-N8i"/>
                                         </connections>
                                     </tableViewCell>
@@ -1984,7 +1987,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
