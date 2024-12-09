@@ -1660,6 +1660,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="profileImageView" destination="ZOZ-hv-YNl" id="s6A-oj-JV2"/>
                                             <outlet property="usernameLabel" destination="1Yp-Mh-1ti" id="rvR-KR-XtW"/>
                                         </connections>
                                     </tableViewCell>

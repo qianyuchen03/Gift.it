@@ -25,6 +25,7 @@ class ChatSettingsViewController: UIViewController, UITableViewDelegate, UITable
     var originalChatName = ""
     var conversationId = ""
     var members = [String]()
+    var memberDetails: [(name: String, picture: UIImage?)] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,54 +54,67 @@ class ChatSettingsViewController: UIViewController, UITableViewDelegate, UITable
         
         docRef.getDocument { (document, error) in
             guard error == nil else {
-                print("error", error ?? "")
+                print("Error fetching chat members: \(error?.localizedDescription ?? "")")
                 return
             }
             
             if let document = document, document.exists {
                 do {
                     let allMembers = try document.data(as: AllMembersData.self)
-                    var memberDisplayNames: [String] = []
+                    var memberDetailsTemp: [(name: String, picture: UIImage?)] = []
                     let dispatchGroup = DispatchGroup()
                     
                     for member in allMembers.members {
                         dispatchGroup.enter()
                         
-                        self.getDisplayName(userUID: member) { displayName in
-                            memberDisplayNames.append(displayName)
+                        self.getDisplayNameAndPicture(userUID: member) { name, picture in
+                            memberDetailsTemp.append((name, picture))
                             dispatchGroup.leave()
                         }
                     }
                     
                     dispatchGroup.notify(queue: .main) {
-                        self.members = memberDisplayNames
+                        // Populate memberDetails with fetched data
+                        self.memberDetails = memberDetailsTemp
+                        
+                        // Update only the display names for the members array
+                        self.members = self.memberDetails.map { $0.name }
+                        
+                        // Update the UI (numMembers and table view)
                         self.numMembersLabel.text = "\(self.members.count) People"
                         self.membersTableView.reloadData()
                     }
                 } catch {
-                    print("Error decoding messages: \(error.localizedDescription)")
+                    print("Error decoding members: \(error.localizedDescription)")
                 }
-                
             }
         }
     }
+
     
-    func getDisplayName(userUID: String, completion: @escaping (String) -> Void) {
+    func getDisplayNameAndPicture(userUID: String, completion: @escaping (String, UIImage?) -> Void) {
         let docRef = db.collection("users").document(userUID)
 
         docRef.getDocument { (document, error) in
             guard error == nil else {
-                print("error", error ?? "")
-                completion("")  // Return an empty string if there's an error
+                print("Error fetching user info: \(error?.localizedDescription ?? "")")
+                completion("", nil) // Return empty name and nil image on error
                 return
             }
 
             if let document = document, document.exists {
                 let data = document.data()
                 let displayName = data?["name"] as? String ?? ""
-                completion(displayName)  // Pass the displayName to the completion handler
+                
+                if let profilePictureDataURL = data?["profilePicture"] as? String {
+                    self.setProfileImage(from: profilePictureDataURL) { image in
+                        completion(displayName, image) // Return display name and image
+                    }
+                } else {
+                    completion(displayName, nil) // Return display name and nil image if no profile picture
+                }
             } else {
-                completion("")  // Return an empty string if the document does not exist
+                completion("", nil) // Document not found, return empty name and nil image
             }
         }
     }
@@ -126,11 +140,59 @@ class ChatSettingsViewController: UIViewController, UITableViewDelegate, UITable
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "FriendCell", for: indexPath) as? FriendCell else {
             return UITableViewCell()
         }
-        
-        let displayName = members[indexPath.row]
-        cell.usernameLabel?.text = displayName
-        
+
+        let memberDetail = memberDetails[indexPath.row]
+        cell.usernameLabel?.text = memberDetail.name
+
+        if let profilePicture = memberDetail.picture {
+            cell.profileImageView.image = profilePicture
+        } else {
+            cell.profileImageView.image = UIImage(systemName: "person.circle") // Placeholder
+        }
+
         return cell
+    }
+
+
+    // Use the same setProfileImage method for Base64 decoding as in MyFriendsListViewController
+    func setProfileImage(from dataURL: String, completion: @escaping (UIImage?) -> Void) {
+        guard let base64String = dataURL.split(separator: ",").last else {
+            print("Invalid data URL format.")
+            completion(nil)
+            return
+        }
+
+        if let imageData = Data(base64Encoded: String(base64String)),
+           let decodedImage = UIImage(data: imageData) {
+            completion(decodedImage)
+        } else {
+            print("Failed to decode Base64 string into an image.")
+            completion(nil)
+        }
+    }
+    
+    
+    // This function is to fetch profile picture from Firebase
+    func fetchProfilePicture(userUID: String, completion: @escaping (UIImage?) -> Void) {
+        let docRef = db.collection("users").document(userUID)
+
+        docRef.getDocument { (document, error) in
+            guard error == nil else {
+                print("Error fetching profile picture: \(error?.localizedDescription ?? "")")
+                completion(nil)
+                return
+            }
+
+            if let document = document, document.exists {
+                if let profilePictureDataURL = document.data()?["profilePicture"] as? String {
+                    self.setProfileImage(from: profilePictureDataURL, completion: completion)
+                } else {
+                    completion(nil) // No profile picture, return nil
+                }
+            } else {
+                completion(nil) // Document not found, return nil
+            }
+        }
     }
     
     // Called when 'return' key pressed
