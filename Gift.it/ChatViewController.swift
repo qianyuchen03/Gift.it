@@ -216,6 +216,7 @@ class ChatViewController: MessagesViewController {
             if let destination = segue.destination as? ChatSettingsViewController {
                 destination.originalChatName = chatName
                 destination.conversationId = conversationId
+                destination.delegate = self
             }
         } else if segue.identifier == "CartSegueIdentifier" {
             if let destination = segue.destination as? CartViewController {

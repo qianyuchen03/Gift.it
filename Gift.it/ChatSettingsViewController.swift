@@ -26,6 +26,7 @@ class ChatSettingsViewController: UIViewController, UITableViewDelegate, UITable
     var conversationId = ""
     var members = [String]()
     var memberDetails: [(name: String, picture: UIImage?)] = []
+    var delegate: ChatViewController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -122,6 +123,8 @@ class ChatSettingsViewController: UIViewController, UITableViewDelegate, UITable
     func changeChatName() {
         let newChatName = editChatNameTextField.text
         chatNameLabel.text = newChatName
+        delegate.title = newChatName
+        delegate.chatName = newChatName ?? ""
         editChatNameTextField.isHidden = true
         chatNameLabel.isHidden = false
         
