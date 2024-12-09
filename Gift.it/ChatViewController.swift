@@ -23,6 +23,15 @@ struct Sender: SenderType {
     var photoURL: String
     var senderId: String
     var displayName: String
+    
+    func getProfileImage() -> UIImage? {
+        guard let base64String = photoURL.split(separator: ",").last,
+              let imageData = Data(base64Encoded: String(base64String)),
+              let decodedImage = UIImage(data: imageData) else {
+            return UIImage(systemName: "person.circle") ?? UIImage()
+        }
+        return decodedImage
+    }
 }
 
 struct MessageData: Codable {
@@ -94,6 +103,32 @@ class ChatViewController: MessagesViewController {
         }
     }
     
+    func getSenderDetails(userUID: String, completion: @escaping (Sender) -> Void) {
+        let docRef = db.collection("users").document(userUID)
+        
+        docRef.getDocument { (document, error) in
+            guard error == nil else {
+                print("Error fetching sender details:", error ?? "")
+                let defaultSender = Sender(photoURL: "", senderId: userUID, displayName: "Unknown")
+                completion(defaultSender)
+                return
+            }
+            
+            if let document = document, document.exists {
+                let data = document.data()
+                let displayName = data?["name"] as? String ?? "Unknown"
+                let photoURL = data?["profilePicture"] as? String ?? ""
+                let sender = Sender(photoURL: photoURL, senderId: userUID, displayName: displayName)
+                completion(sender)
+            } else {
+                let defaultSender = Sender(photoURL: "", senderId: userUID, displayName: "Unknown")
+                completion(defaultSender)
+            }
+        }
+    }
+
+
+    
     func getDisplayName(userUID: String, completion: @escaping (String) -> Void) {
         let docRef = db.collection("users").document(userUID)
 
@@ -143,15 +178,13 @@ class ChatViewController: MessagesViewController {
                     for message in allMessages.messages {
                         dispatchGroup.enter()
                         
-                        self.getDisplayName(userUID: message.senderId) { displayName in
-                            let sender = Sender(photoURL: "", senderId: message.senderId, displayName: displayName)
+                        self.getSenderDetails(userUID: message.senderId) { sender in
                             let myAttribute = [NSAttributedString.Key.font: UIFont(name: "Courier New", size: 18.0)!]
-                            let message = Message(sender: sender, messageId: message.id, sentDate: message.date, kind: .attributedText(NSAttributedString(string: message.content, attributes: myAttribute)))
+                            let chatMessage = Message(sender: sender, messageId: message.id, sentDate: message.date, kind: .attributedText(NSAttributedString(string: message.content, attributes: myAttribute)))
                             
-                            messagesWithSenders.append(message)
+                            messagesWithSenders.append(chatMessage)
                             dispatchGroup.leave()
-                        }
-                    }
+                        }                    }
                     
                     dispatchGroup.notify(queue: .main) {
                         self.messages = messagesWithSenders.sorted(by: { $0.sentDate < $1.sentDate })
@@ -215,6 +248,24 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
 }
 
 extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate {
+    
+    public func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at _: IndexPath, in _: MessagesCollectionView) {
+        // Check if the sender is of type Sender
+        if let sender = message.sender as? Sender {
+            if let profileImage = sender.getProfileImage() {
+                // Use the profile image if available
+                avatarView.image = profileImage
+            } else {
+                // Use initials if no profile image is available
+                avatarView.initials = String(sender.displayName.prefix(1)) // Get the first letter of the display name
+            }
+        } else {
+            // Default case: use placeholder
+            avatarView.image = UIImage(systemName: "person.circle") // Default image
+            avatarView.initials = "?"
+        }
+    }
+    
     var currentSender: any MessageKit.SenderType {
         return selfSender
     }
@@ -251,3 +302,5 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
     }
 
 }
+
+
