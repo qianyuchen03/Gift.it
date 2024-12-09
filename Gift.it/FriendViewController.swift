@@ -1,5 +1,6 @@
 import UIKit
 import FirebaseFirestore
+import FirebaseAuth
 
 struct WishListItem {
     var name: String
@@ -16,6 +17,9 @@ class FriendViewController: UIViewController, UIPopoverPresentationControllerDel
     @IBOutlet var bioLabel: UILabel!
     @IBOutlet var birthdayLabel: UILabel!
     @IBOutlet var usernameLabel: UILabel!
+    var wishlistVisibility: Bool?
+    let uid = Auth.auth().currentUser!.uid
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -24,8 +28,31 @@ class FriendViewController: UIViewController, UIPopoverPresentationControllerDel
         if let user = user {
             print("User ID: \(user.id)")
             fetchUserData(userId: user.id)
+            fetchWishlistVisibility(userId: user.id)
         }
     }
+    
+    func fetchWishlistVisibility(userId: String) {
+            let db = Firestore.firestore()
+            let userRef = db.collection("users").document(userId)
+            
+            userRef.getDocument { [weak self] (document, error) in
+                guard let self = self else { return }
+                if let error = error {
+                    print("Error fetching modeSwitch3 state: \(error)")
+                    return
+                }
+                if let document = document, document.exists {
+                    self.wishlistVisibility = document.data()?["modeSwitch3"] as? Bool ?? true
+                    print("wishlistVisibility: \(self.wishlistVisibility ?? false)")
+
+                    // Update the button visibility on the main thread
+                    DispatchQueue.main.async {
+                        self.viewWishlistButton.isHidden = self.wishlistVisibility ?? false
+                    }
+                }
+            }
+        }
     
     func fetchUserData(userId: String) {
         // Reference to the users collection

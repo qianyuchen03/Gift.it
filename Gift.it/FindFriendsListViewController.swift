@@ -21,6 +21,9 @@ class FindFriendsListViewController: UIViewController, UITableViewDelegate, UITa
         return Auth.auth().currentUser?.uid
     }
     
+    // A dictionary to track pending request statuses for each user
+    var pendingRequests: [String: Bool] = [:]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
@@ -43,11 +46,22 @@ class FindFriendsListViewController: UIViewController, UITableViewDelegate, UITa
         cell.usernameLabel?.text = user.username
         cell.selectionStyle = .none // Prevent selection highlight
         
+        // Check if the user already has a pending request
+        let isPending = pendingRequests[user.id] ?? false
+        let buttonText = isPending ? "Pending" : "Add"
+        cell.addButton.setTitle(buttonText, for: .normal)
+        cell.addButton.titleLabel?.font = isPending ? UIFont.systemFont(ofSize: 2) : UIFont.systemFont(ofSize: 12)
+
+        cell.addButton.sizeToFit()
+        cell.addButton.frame.size.width += 10
+        cell.addButton.contentHorizontalAlignment = .center
+                
         // Add button action for adding friends
         cell.addButtonAction = { [weak self] in
-            self?.addUserAsFriend(for: user, at: indexPath)
+            if !isPending {
+                self?.addUserAsFriend(for: user, at: indexPath)
+            }
         }
-        
         return cell
     }
     
@@ -105,11 +119,38 @@ class FindFriendsListViewController: UIViewController, UITableViewDelegate, UITa
                 return nil
             }
             
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
+            self.checkPendingRequests()
         }
     }
+    
+    // Check if a pending request exists for each user
+        func checkPendingRequests() {
+            guard let currentUserId = currentUserId else { return }
+            
+            for user in users {
+                db.collection("users").document(user.id).getDocument { [weak self] document, error in
+                    guard let self = self else { return }
+                    
+                    if let error = error {
+                        print("Error fetching notifications: \(error)")
+                        return
+                    }
+                    
+                    guard let data = document?.data(), let notifications = data["notifications"] as? [[String: Any]] else { return }
+                    
+                    let hasPendingRequest = notifications.contains { notif in
+                        guard let type = notif["type"] as? String,
+                              let from = notif["from"] as? String else { return false }
+                        return type == "requestNotif" && from == currentUserId
+                    }
+                    
+                    self.pendingRequests[user.id] = hasPendingRequest
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
+                }
+            }
+        }
     
     // MARK: - Friend Request
     func addUserAsFriend(for user: User, at indexPath: IndexPath) {
