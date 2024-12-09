@@ -8,6 +8,7 @@
 import UIKit
 import FSCalendar
 import FirebaseFirestore
+import FirebaseAuth
 
 extension UIColor {
     // Hex initializer for custom colors
@@ -30,9 +31,12 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
 
     var calendar: FSCalendar!
     var birthdaysByDate: [String: [String]] = [:] // Dictionary to store birthdays by date (formatted as "MM-dd")
+    let uid = Auth.auth().currentUser!.uid
+    var bdaySwitchEnabled: Bool?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        bdaySwitchEnabled = false
 
         calendar = FSCalendar()
         calendar.delegate = self
@@ -57,7 +61,27 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
         calendar.appearance.headerTitleFont = UIFont(name: "Courier New Bold", size: 18)
         calendar.appearance.weekdayFont = UIFont(name: "Courier New Bold", size: 14)
         
+        fetchBdaySwitchState()
         fetchBirthdays()
+    }
+    
+    func fetchBdaySwitchState() {
+            let db = Firestore.firestore()
+            let userRef = db.collection("users").document(uid)
+            
+            userRef.getDocument { [weak self] (document, error) in
+                guard let self = self else { return }
+                if let error = error {
+                    print("Error fetching bdaySwitch state: \(error)")
+                    return
+                }
+                if let document = document, document.exists {
+                    self.bdaySwitchEnabled = document.data()?["bdaySwitch"] as? Bool ?? true
+                    DispatchQueue.main.async {
+                        self.calendar.reloadData()
+                    }
+                }
+            }
     }
     
     func calendar(_ calendar: FSCalendar, appearance: FSCalendarAppearance, fillDefaultColorFor date: Date) -> UIColor? {
@@ -66,7 +90,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
         let dateString = dateFormatter.string(from: date)
 
         // Highlight dates with birthdays
-        if birthdaysByDate[dateString] != nil {
+        if !bdaySwitchEnabled!, birthdaysByDate[dateString] != nil {
             return UIColor(hex: "#8C6872", alpha: 0.5) // Highlight color
         }
 

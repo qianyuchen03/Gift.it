@@ -404,7 +404,7 @@
                                     <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" weight="bold"/>
                                 </buttonConfiguration>
                                 <connections>
-                                    <segue destination="NRo-dy-eJG" kind="show" id="RpL-aE-6O0"/>
+                                    <action selector="bellButtonTapped:" destination="8Ip-DK-sNW" eventType="touchUpInside" id="ulQ-XB-c0N"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -421,14 +421,16 @@
                     </view>
                     <navigationItem key="navigationItem" id="75b-yl-rK7"/>
                     <connections>
+                        <outlet property="bellButton" destination="hbD-ki-031" id="6co-IB-KQd"/>
                         <outlet property="searchBar" destination="wTL-1V-M3M" id="5cd-wW-zPF"/>
                         <outlet property="tableView" destination="kIR-c9-d3v" id="TAb-Rd-56Q"/>
                         <segue destination="h8B-Kn-1s0" kind="show" identifier="showFriendProfile" id="tP6-nf-vyN"/>
+                        <segue destination="NRo-dy-eJG" kind="show" identifier="toFriendsNotificationsVC" id="2uO-IU-0zH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xYs-3q-IPl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1695.4198473282443" y="1797.8873239436621"/>
+            <point key="canvasLocation" x="-1798" y="1786"/>
         </scene>
         <!--Friend View Controller-->
         <scene sceneID="sUs-7u-JkK">
@@ -1950,7 +1952,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ych-BL-ycE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1695" y="1054"/>
+            <point key="canvasLocation" x="-1799" y="1120"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
@@ -1982,7 +1984,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

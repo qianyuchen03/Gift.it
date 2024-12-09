@@ -8,6 +8,8 @@ import FirebaseAuth
 class MyFriendsListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     @IBOutlet var searchBar: UISearchBar!
     @IBOutlet var tableView: UITableView!
+    @IBOutlet weak var bellButton: UIButton!
+    
     
     var friendsList: [User] = []   // Array to hold User objects for the logged-in user's friends
     var filteredFriendsList: [User] = [] // Array to hold filtered User objects for search
@@ -16,6 +18,8 @@ class MyFriendsListViewController: UIViewController, UITableViewDelegate, UITabl
         return Auth.auth().currentUser?.uid  // Gets the logged-in user's ID
     }
     var friendsListListener: ListenerRegistration?  // Listener for real-time updates
+    var notifSwitch: Bool?
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return filteredFriendsList.count
@@ -28,11 +32,7 @@ class MyFriendsListViewController: UIViewController, UITableViewDelegate, UITabl
         
         let user = filteredFriendsList[indexPath.row]
         cell.usernameLabel?.text = user.username
-        
-//        // Set up button action for adding friends
-//        cell.addButtonAction = { [weak self] in
-//            self?.addUserAsFriend(user, at: indexPath)
-//        }
+    
         
         return cell
     }
@@ -64,6 +64,8 @@ class MyFriendsListViewController: UIViewController, UITableViewDelegate, UITabl
         tableView.dataSource = self
         searchBar.delegate = self  // Set search bar delegate
         observeFriendsListChanges()  // Set up real-time listener
+        fetchNotifSwitchState()
+        updateBellButtonState()
     }
     
     deinit {
@@ -154,53 +156,6 @@ class MyFriendsListViewController: UIViewController, UITableViewDelegate, UITabl
        }
     
     
-    
-    // MARK: - Swipe to delete
-//    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-//        let deleteAction = UIContextualAction(style: .destructive, title: "Remove Friend") { (action, view, completionHandler) in
-//            // Safely remove the friend only if index is valid
-//            guard indexPath.row < self.friendsList.count else {
-//                completionHandler(false)
-//                return
-//            }
-//            
-//            // Remove the friend from Firestore and the local list
-//            let friendToRemove = self.friendsList[indexPath.row]
-//            self.removeFriendFromFirestore(friendId: friendToRemove.id) { success in
-//                if success {
-//                    // Update the local list and table view safely
-//                    if let index = self.friendsList.firstIndex(where: { $0.id == friendToRemove.id }) {
-//                        self.friendsList.remove(at: index)
-//                        tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-//                    }
-//                }
-//                completionHandler(success)
-//            }
-//        }
-//        
-//        return UISwipeActionsConfiguration(actions: [deleteAction])
-//    }
-//    
-//    func removeFriendFromFirestore(friendId: String, completion: @escaping (Bool) -> Void) {
-//        guard let userId = currentUserId else {
-//            completion(false)
-//            return
-//        }
-//        
-//        db.collection("users").document(userId).updateData([
-//            "friendsList": FieldValue.arrayRemove([friendId])
-//        ]) { error in
-//            if let error = error {
-//                print("Error removing friend from friends list: \(error)")
-//                completion(false)
-//            } else {
-//                print("Successfully removed friend from friends list.")
-//                completion(true)
-//            }
-//        }
-//    }
-    
-    
     // MARK: - Swipe to delete
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "Remove Friend") { (action, view, completionHandler) in
@@ -262,5 +217,67 @@ class MyFriendsListViewController: UIViewController, UITableViewDelegate, UITabl
             }
         }
     }
+    
+    func updateBellButtonState() {
+        
+        let userRef = db.collection("users").document(currentUserId!)
+        
+        userRef.getDocument { [weak self] (document, error) in
+            guard let self = self else { return }
+            
+            if let error = error {
+                print("Error fetching user data for bell button: \(error)")
+                return
+            }
+            
+            if let document = document, document.exists {
+                // Check the notifSwitch status
+                let notifSwitch = document.data()?["notifSwitch"] as? Bool ?? false
+                
+                if !notifSwitch {
+                    // If notifSwitch is false, set the bell to always empty
+                    self.bellButton.setImage(UIImage(systemName: "bell"), for: .normal)
+                    return
+                }
+                
+                // Check the notifications array
+                let notifications = document.data()?["notifications"] as? [String] ?? []
+                
+                if notifications.isEmpty {
+                    // If no notifications, set the bell to empty
+                    self.bellButton.setImage(UIImage(systemName: "bell"), for: .normal)
+                } else {
+                    // If there are notifications, set the bell to filled
+                    self.bellButton.setImage(UIImage(systemName: "bell.fill"), for: .normal)
+                }
+            }
+        }
+    }
 
+    
+    func fetchNotifSwitchState() {
+        guard let currentUserId = currentUserId else { return }
+        
+        let userRef = db.collection("users").document(currentUserId)
+        
+        userRef.addSnapshotListener { [weak self] (snapshot, error) in
+            guard let self = self else { return }
+            
+            if let error = error {
+                print("Error listening for notifSwitch changes: \(error)")
+                return
+            }
+            
+            if let snapshot = snapshot, snapshot.exists {
+                self.notifSwitch = snapshot.data()?["notifSwitch"] as? Bool ?? false
+                self.updateBellButtonState()  // Update bell button whenever data changes
+            }
+        }
+    }
+
+    @IBAction func bellButtonTapped(_ sender: Any) {
+        print("bell button tapped")
+        performSegue(withIdentifier: "toFriendsNotificationsVC", sender: self)
+    }
+    
 }
