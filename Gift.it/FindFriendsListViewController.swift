@@ -56,13 +56,8 @@ class FindFriendsListViewController: UIViewController, UITableViewDelegate, UITa
         
         // Check if the user already has a pending request
         let isPending = pendingRequests[user.id] ?? false
-        let buttonText = isPending ? "Pending" : "Add"
+        let buttonText = isPending ? "Sent" : "Add"
         cell.addButton.setTitle(buttonText, for: .normal)
-        cell.addButton.titleLabel?.font = isPending ? UIFont.systemFont(ofSize: 2) : UIFont.systemFont(ofSize: 12)
-
-        cell.addButton.sizeToFit()
-        cell.addButton.frame.size.width += 10
-        cell.addButton.contentHorizontalAlignment = .center
                 
         // Add button action for adding friends
         cell.addButtonAction = { [weak self] in

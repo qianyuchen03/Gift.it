@@ -268,18 +268,21 @@ class MyFriendsListViewController: UIViewController, UITableViewDelegate, UITabl
                 if !notifSwitch {
                     // If notifSwitch is false, set the bell to always empty
                     self.bellButton.setImage(UIImage(systemName: "bell"), for: .normal)
+                    print("Notifs off")
                     return
                 }
                 
                 // Check the notifications array
-                let notifications = document.data()?["notifications"] as? [String] ?? []
+                let notifications = document.data()?["notifications"] as? [[String: Any]] ?? []
                 
                 if notifications.isEmpty {
                     // If no notifications, set the bell to empty
                     self.bellButton.setImage(UIImage(systemName: "bell"), for: .normal)
+                    print("No notifs!!")
                 } else {
                     // If there are notifications, set the bell to filled
                     self.bellButton.setImage(UIImage(systemName: "bell.fill"), for: .normal)
+                    print("You have notifs!")
                 }
             }
         }

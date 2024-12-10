@@ -669,10 +669,10 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="The-4r-Gfu">
-                                                    <rect key="frame" x="334" y="15" width="24" height="14"/>
+                                                    <rect key="frame" x="302" y="13" width="71" height="26"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <state key="normal" title="Button"/>
-                                                    <buttonConfiguration key="configuration" style="gray"/>
+                                                    <buttonConfiguration key="configuration" style="gray" title="Add"/>
                                                     <connections>
                                                         <action selector="addButtonTapped:" destination="4xQ-Qb-EDn" eventType="touchUpInside" id="Qcp-ev-Qtl"/>
                                                     </connections>
@@ -879,14 +879,22 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="UTk-6i-hOu">
-                        <barButtonItem key="rightBarButtonItem" image="bell.fill" catalog="system" id="rE3-o2-ZlB">
-                            <connections>
-                                <action selector="bellButtonTapped:" destination="A5Z-Cv-fes" id="x5B-ma-ElB"/>
-                            </connections>
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="4AI-ft-XMP">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="R11-VO-xKf">
+                                <rect key="frame" x="327" y="10.666666666666664" width="50" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="bell" catalog="system">
+                                    <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" weight="bold"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="bellButtonTapped:" destination="A5Z-Cv-fes" eventType="touchUpInside" id="BhZ-pM-mH7"/>
+                                </connections>
+                            </button>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="bellButton" destination="rE3-o2-ZlB" id="CcO-v8-sEc"/>
+                        <outlet property="bellButton" destination="R11-VO-xKf" id="qgo-XO-hpJ"/>
                         <outlet property="tableView" destination="DG1-d3-UCH" id="eNH-5Z-naY"/>
                         <segue destination="Bld-bM-OPA" kind="show" identifier="toGiftingGroupNotificationVC" id="yDu-Jy-Ngu"/>
                     </connections>
@@ -1965,7 +1973,6 @@
     <color key="tintColor" red="0.94901960780000005" green="0.59999999999999998" blue="0.69411764710000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
     <resources>
         <image name="bell" catalog="system" width="125" height="128"/>
-        <image name="bell.fill" catalog="system" width="123" height="128"/>
         <image name="calendar" catalog="system" width="128" height="107"/>
         <image name="cart" catalog="system" width="128" height="102"/>
         <image name="checkmark" catalog="system" width="128" height="114"/>
@@ -1988,7 +1995,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

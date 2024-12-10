@@ -13,8 +13,8 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
     
     @IBOutlet weak var tableView: UITableView!
     
-
-    @IBOutlet weak var bellButton: UIBarButtonItem!
+    @IBOutlet weak var bellButton: UIButton!
+    
     
     let db = Firestore.firestore()
     var isDataLoaded = false
@@ -22,7 +22,7 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
 
     var listener: ListenerRegistration?
     var chats: [Chat] = []
-
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         listener?.remove()
@@ -117,14 +117,7 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
         
         return cell
     }
-    
-    // Handle cell selection (segue to the chat screen)
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//            let selectedGroup = giftingGroups[indexPath.row]
-//
-//            // Perform a segue to the chat screen
-//            performSegue(withIdentifier: "ChatSegue", sender: selectedGroup)
-//        }
+
     
     // Prepare for segue to the chat screen
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -297,7 +290,7 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
             
             // Query Firestore for invitations where recipientId matches the current user and status is "pending"
             db.collection("invitations")
-                .whereField("recipientId", isEqualTo: currentUserId)
+                .whereField("toUserId", isEqualTo: currentUserId)
                 .whereField("status", isEqualTo: "pending")
                 .getDocuments { (querySnapshot, error) in
                     if let error = error {
@@ -314,17 +307,38 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
                 }
         }
     
-    
     func updateBellButton(hasPendingInvitations: Bool) {
-        let imageName = hasPendingInvitations ? "bell.badge.fill" : "bell.fill"
         
-        if let bellImage = UIImage(named: imageName) {
-            bellButton.image = bellImage
-        } else {
-            print("Error: Image \(imageName) not found in asset catalog.")
+        let userRef = db.collection("users").document(uid)
+        
+        userRef.getDocument { [weak self] (document, error) in
+            guard let self = self else { return }
+            
+            if let error = error {
+                print("Error fetching user data for bell button: \(error)")
+                return
+            }
+            
+            if let document = document, document.exists {
+                let notifSwitch = document.data()?["notifSwitch"] as? Bool ?? false
+                
+                if !notifSwitch {
+                    // If notifSwitch is false, set the bell to always empty
+                    self.bellButton.setImage(UIImage(systemName: "bell"), for: .normal)
+                    print("Notifs off")
+                    return
+                }
+                
+                if !hasPendingInvitations {
+                    self.bellButton.setImage(UIImage(systemName: "bell"), for: .normal)
+                    print("No invites!!")
+                } else {
+                    self.bellButton.setImage(UIImage(systemName: "bell.fill"), for: .normal)
+                    print("You have invites!")
+                }
+            }
         }
     }
-    
     
     @IBAction func bellButtonTapped(_ sender: Any) {
         print("bell button tapped")

@@ -66,23 +66,29 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
     }
     
     func fetchBdaySwitchState() {
-            let db = Firestore.firestore()
-            let userRef = db.collection("users").document(uid)
+        let db = Firestore.firestore()
+        let userRef = db.collection("users").document(uid)
+        
+        // Add a listener to the document
+        userRef.addSnapshotListener { [weak self] (documentSnapshot, error) in
+            guard let self = self else { return }
             
-            userRef.getDocument { [weak self] (document, error) in
-                guard let self = self else { return }
-                if let error = error {
-                    print("Error fetching bdaySwitch state: \(error)")
-                    return
-                }
-                if let document = document, document.exists {
-                    self.bdaySwitchEnabled = document.data()?["bdaySwitch"] as? Bool ?? true
-                    DispatchQueue.main.async {
-                        self.calendar.reloadData()
-                    }
-                }
+            if let error = error {
+                print("Error listening to bdaySwitch changes: \(error)")
+                return
             }
+            
+            if let document = documentSnapshot, document.exists {
+                self.bdaySwitchEnabled = document.data()?["bdaySwitch"] as? Bool ?? true
+                DispatchQueue.main.async {
+                    self.calendar.reloadData()
+                }
+            } else {
+                print("Document does not exist.")
+            }
+        }
     }
+
     
     func calendar(_ calendar: FSCalendar, appearance: FSCalendarAppearance, fillDefaultColorFor date: Date) -> UIColor? {
         let dateFormatter = DateFormatter()
@@ -100,7 +106,7 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
 
     func fetchBirthdays() {
         let db = Firestore.firestore()
-        let usersRef = db.collection("users")
+        let currentUserRef = db.collection("users").document(uid)
         
         // DateFormatter to parse "September 22, 2003" format
         let dateFormatter = DateFormatter()
@@ -108,38 +114,59 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
         let outputFormatter = DateFormatter()
         outputFormatter.dateFormat = "MM-dd" // Format as "MM-dd" for easy comparison
         
-        usersRef.getDocuments { snapshot, error in
+        // Fetch the current user's friendsList
+        currentUserRef.getDocument { [weak self] document, error in
+            guard let self = self else { return }
+            
+            if let error = error {
+                print("Error fetching friendsList: \(error)")
+                return
+            }
+            
+            guard let document = document, document.exists,
+                  let data = document.data(),
+                  let friendsList = data["friendsList"] as? [String] else {
+                print("No friendsList found or empty.")
+                return
+            }
+            
+            // Fetch birthdays for friends
+            let usersRef = db.collection("users")
+            usersRef.whereField(FieldPath.documentID(), in: friendsList).getDocuments { snapshot, error in
                 if let error = error {
-                    print("Error fetching birthdays: \(error)")
+                    print("Error fetching friends' birthdays: \(error)")
                     return
                 }
                 
-            guard let documents = snapshot?.documents else { return }
-            
-            // Iterate through each document to extract birthday data
-            for document in documents {
-                let data = document.data()
-                if let name = data["name"] as? String,
-                   let birthdayString = data["birthday"] as? String,
-                   let birthdayDate = dateFormatter.date(from: birthdayString) { // Parse birthday string to Date
-                    
-                    // Format the Date object to "MM-dd"
-                    let formattedBirthday = outputFormatter.string(from: birthdayDate)
-                    
-                    // Add user to the correct date entry in the dictionary
-                    if self.birthdaysByDate[formattedBirthday] != nil {
-                        self.birthdaysByDate[formattedBirthday]?.append(name)
-                    } else {
-                        self.birthdaysByDate[formattedBirthday] = [name]
+                guard let documents = snapshot?.documents else { return }
+                
+                // Iterate through each document to extract birthday data
+                for document in documents {
+                    let data = document.data()
+                    if let name = data["name"] as? String,
+                       let birthdayString = data["birthday"] as? String,
+                       let birthdayDate = dateFormatter.date(from: birthdayString) { // Parse birthday string to Date
+                        
+                        // Format the Date object to "MM-dd"
+                        let formattedBirthday = outputFormatter.string(from: birthdayDate)
+                        
+                        // Add user to the correct date entry in the dictionary
+                        if self.birthdaysByDate[formattedBirthday] != nil {
+                            self.birthdaysByDate[formattedBirthday]?.append(name)
+                        } else {
+                            self.birthdaysByDate[formattedBirthday] = [name]
+                        }
                     }
                 }
-            }
-            print("Fetched birthdays:", self.birthdaysByDate)
+                
+                print("Fetched birthdays:", self.birthdaysByDate)
                 DispatchQueue.main.async {
                     self.calendar.reloadData()
                 }
+            }
         }
     }
+
 
     
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {

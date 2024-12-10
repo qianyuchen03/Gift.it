@@ -23,11 +23,7 @@ class UserCell: UITableViewCell {
     @IBAction func addButtonTapped(_ sender: Any) {
         print("BUTTON IS TAPPED")
         
-        addButton.setTitle("Pending", for: .normal)
-        addButton.titleLabel?.font = UIFont.systemFont(ofSize: 4)
-        addButton.sizeToFit()
-        addButton.frame.size.width += 10
-        addButton.contentHorizontalAlignment = .center
+        addButton.setTitle("Sent", for: .normal)
         addButton.isEnabled = false
         addButtonAction?()
     }
