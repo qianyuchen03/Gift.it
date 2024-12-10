@@ -90,8 +90,11 @@ class MyFriendsListViewController: UIViewController, UITableViewDelegate, UITabl
         tableView.dataSource = self
         searchBar.delegate = self  // Set search bar delegate
         observeFriendsListChanges()  // Set up real-time listener
+        print("GOOD TILL HERE")
         fetchNotifSwitchState()
+        print("GOOD TILL HERE 2")
         updateBellButtonState()
+        print("AND HERE")
     }
     
     deinit {
@@ -149,41 +152,24 @@ class MyFriendsListViewController: UIViewController, UITableViewDelegate, UITabl
     }
     
     // MARK: - Search Bar Methods
-
-        
-
         func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-
             if searchText.isEmpty {
-
                 filteredFriendsList = friendsList  // Show all friends if search text is empty
-
             } else {
-
                 filteredFriendsList = friendsList.filter { $0.username.lowercased().contains(searchText.lowercased()) }
-
             }
-
             tableView.reloadData()
-
         }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-
             searchBar.text = ""
-
             filteredFriendsList = friendsList  // Reset to show all friends
-
             tableView.reloadData()
-
             searchBar.resignFirstResponder()
-
         }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-
            searchBar.resignFirstResponder()  // Dismiss keyboard
-
        }
     
     
@@ -195,28 +181,31 @@ class MyFriendsListViewController: UIViewController, UITableViewDelegate, UITabl
                 completionHandler(false)
                 return
             }
-            
+
             // Get the friend to remove
             let friendToRemove = self.filteredFriendsList[indexPath.row]
-            
+
             // Remove the friend relationship from Firestore
             self.removeFriendRelationship(friendId: friendToRemove.id) { success in
                 if success {
-                    // Update the local list and table view safely
+                    // Update the local list safely
                     if let index = self.friendsList.firstIndex(where: { $0.id == friendToRemove.id }) {
                         self.friendsList.remove(at: index)
-                        tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
                     }
-                    self.filteredFriendsList.remove(at: indexPath.row)
-
-                    tableView.deleteRows(at: [indexPath], with: .automatic)
+                    
+                    if let index = self.filteredFriendsList.firstIndex(where: { $0.id == friendToRemove.id }) {
+                        self.filteredFriendsList.remove(at: index)
+                        tableView.deleteRows(at: [indexPath], with: .automatic)
+                    }
                 }
+                self.tableView.reloadData()
                 completionHandler(success)
             }
         }
-        
+
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
+
 
     func removeFriendRelationship(friendId: String, completion: @escaping (Bool) -> Void) {
         guard let currentUserId = currentUserId else {

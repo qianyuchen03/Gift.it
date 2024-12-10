@@ -130,6 +130,12 @@ class CalendarViewController: UIViewController, FSCalendarDelegate, FSCalendarDa
                 return
             }
             
+            // If friendsList is empty, do not proceed with fetching birthdays
+            if friendsList.isEmpty {
+                print("No friends in the list. Skipping birthday fetch.")
+                return
+            }
+            
             // Fetch birthdays for friends
             let usersRef = db.collection("users")
             usersRef.whereField(FieldPath.documentID(), in: friendsList).getDocuments { snapshot, error in
