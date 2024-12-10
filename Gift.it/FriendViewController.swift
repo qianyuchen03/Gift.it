@@ -97,15 +97,15 @@ class FriendViewController: UIViewController, UIPopoverPresentationControllerDel
                     self.bioLabel.text = "Bio : No bio yet"
                 }
                 
+                
                 // Load profile picture
-                if let profilePictureBase64 = data?["profilePicture"] as? String,
-                   let imageData = Data(base64Encoded: profilePictureBase64),
-                   let image = UIImage(data: imageData) {
-                    self.profileImageView.image = image
+                // Fetch and display profile picture from Base64 string (Data URL)
+                if let imageDataURL = data?["profilePicture"] as? String {
+                    self.setProfileImage(from: imageDataURL)
                 } else {
-                    self.profileImageView.image = UIImage(systemName: "person.circle") // Default placeholder
+                    // Use a default placeholder image if no profile picture is available
+                    self.profileImageView.image = UIImage(systemName: "person.circle")
                 }
-            
                 
                 // Load wishlist items
                 if let wishlistData = data?["wishlistItems"] as? [[String: Any]] {
@@ -117,6 +117,24 @@ class FriendViewController: UIViewController, UIPopoverPresentationControllerDel
                 } else {
                 print("Document does not exist")
             }
+        }
+    }
+    
+    func setProfileImage(from dataURL: String) {
+        // Extract Base64-encoded part from data URL
+        guard let base64String = dataURL.split(separator: ",").last else {
+            print("Invalid data URL format.")
+            return
+        }
+        
+        // Decode Base64 string into Data
+        if let imageData = Data(base64Encoded: String(base64String)),
+           let decodedImage = UIImage(data: imageData) {
+            DispatchQueue.main.async {
+                self.profileImageView.image = decodedImage
+            }
+        } else {
+            print("Failed to decode Base64 string into an image.")
         }
     }
     

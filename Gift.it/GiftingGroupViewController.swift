@@ -17,11 +17,15 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
     
     
     let db = Firestore.firestore()
+    var currentUserId: String!
     var isDataLoaded = false
     let uid = Auth.auth().currentUser!.uid
 
     var listener: ListenerRegistration?
     var chats: [Chat] = []
+    var modeSwitch1: Bool = false
+    var name: String!
+    
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -36,6 +40,7 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
          fetchChats()
          checkFriendsForUpcomingBirthdays()
          checkForPendingInvitations()
+        
      }
     
     override func viewDidLoad() {
@@ -47,6 +52,131 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
         fetchChats()
         self.checkFriendsForUpcomingBirthdays()
         self.checkForPendingInvitations()
+        currentUserId = Auth.auth().currentUser?.uid
+        if let currentUserId = currentUserId {
+            // Fetch modeSwitch1 from Firebase and then proceed with logic
+            fetchUserDataAndCheckBirthday(currentUserId: currentUserId)
+        }
+    }
+    
+    func fetchUserDataAndCheckBirthday(currentUserId: String) {
+        // Fetch modeSwitch1 and birthday from Firebase
+        let userRef = db.collection("users").document(currentUserId)
+        
+        userRef.getDocument { (document, error) in
+            if let error = error {
+                print("Error fetching user data: \(error.localizedDescription)")
+                return
+            }
+            
+            if let document = document, document.exists {
+                // Log the entire document to check the contents
+                print("User document data: \(document.data() ?? [:])")
+                
+                // Fetch the value of modeSwitch1 and birthday
+                if let modeSwitchValue = document.data()?["modeSwitch1"] as? Int {
+                    // Log the modeSwitch1 value
+                    print("modeSwitch1 value found: \(modeSwitchValue)")
+                    
+                    // Convert modeSwitch1 to Bool (1 = true, 0 = false)
+                    self.modeSwitch1 = (modeSwitchValue == 1)
+                    print("Converted modeSwitch1 to Bool: \(self.modeSwitch1)")
+                } else {
+                    print("modeSwitch1 value not found in Firestore for current user.")
+                    return
+                }
+                
+                if let name = document.data()?["name"] as? String {
+                    self.name = name
+                    print("User name found: \(name)")
+                } else {
+                    print("Name value not found in Firestore for current user.")
+                    return
+                }
+                
+                if let birthdayTimestamp = document.data()?["birthday"] as? String {
+                    print("Birthday Timestamp found: \(birthdayTimestamp)")
+                    
+                    // Convert Timestamp to Date
+                    let selfBirthday = self.parseDate(from: birthdayTimestamp)
+                    print("Converted birthday to Date: \(selfBirthday)")
+                    
+                    // Now check if the birthday is within one month and proceed with creating or joining the group
+                    if self.modeSwitch1 {
+                        print("modeSwitch1 is ON. Checking if birthday is within the next month...")
+                        
+                        if self.isBirthdayWithinNextMonth(birthday: selfBirthday!) {
+                            print("Birthday is within one month.")
+                            
+                            self.checkAndCreateSelfGiftingGroup(birthday: selfBirthday!, selfName: self.name) { [weak self] success in
+                                if success {
+                                    print("Success: Added self to gifting group")
+                                } else {
+                                    print("Failed: Could not create or join gifting group.")
+                                }
+                            }
+                        } else {
+                            print("Birthday is not within one month.")
+                        }
+                    } else {
+                        print("modeSwitch1 is OFF. Proceed with regular invitation flow.")
+                    }
+                } else {
+                    print("Birthday value not found in Firestore for current user.")
+                }
+            } else {
+                print("User document does not exist.")
+            }
+        }
+    }
+
+    
+    func checkAndCreateSelfGiftingGroup(birthday: Date, selfName: String, completion: @escaping (Bool) -> Void) {
+        let groupId = "\(self.currentUserId)_\(birthday)"
+        let groupRef = db.collection("chats").document(groupId)
+        
+        groupRef.getDocument { (document, error) in
+            if let error = error {
+                print("Error checking for existing gifting group: \(error.localizedDescription)")
+                completion(false)
+                return
+            }
+            
+            if document?.exists == true {
+                // Group already exists, just add the current user if they aren't in it
+                groupRef.updateData([
+                    "members": FieldValue.arrayUnion([self.currentUserId])
+                ]) { error in
+                    if let error = error {
+                        print("Error adding user to existing group: \(error.localizedDescription)")
+                        completion(false)
+                    } else {
+                        print("User added to existing group")
+                        completion(true)
+                    }
+                }
+            } else {
+                // Create a new gifting group with the current user
+                let newGroupData = [
+                    "chat_birthday": Timestamp(date: birthday),  // friend's birthday as the group birthday
+                    "gc_name": "\(selfName)'s Birthday",  // group chat name as "Friend's Birthday"
+                    "members": [self.currentUserId],  // Add the current user and the friend as members
+                    "createdAt": Timestamp(date: Date()),  // creation time of the group
+                    "conversation_id": groupId,
+                ] as [String: Any]
+                    
+                
+                groupRef.setData(newGroupData) { error in
+                    if let error = error {
+                        print("Error creating gifting group: \(error.localizedDescription)")
+                        completion(false)
+                    } else {
+                        print("Gifting group created successfully with ID \(groupId)")
+                        completion(true)
+                    }
+                }
+            }
+        }
     }
     
     func fetchChats() {
@@ -157,8 +287,8 @@ class GiftingGroupViewController: UIViewController, UITableViewDelegate, UITable
           }
           return false
       }
-
     
+ 
     func checkFriendsForUpcomingBirthdays() {
         guard let currentUserId = Auth.auth().currentUser?.uid else { return }
         let db = Firestore.firestore()
